@@ -240,23 +240,35 @@
 <section class="section" id="install">
     <h2>Install</h2>
 
+    <div class="install-box" style="border-color: var(--success); margin-bottom: 24px;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--success),#059669);"></div>
+        <h3 style="color: var(--success);">Easiest: Just Ask Claude</h3>
+        <p style="margin-bottom: 16px;">Open Claude Code in your Percy monorepo and paste this:</p>
+        <pre><code><span class="cmd">cd</span> /path/to/percy
+<span class="cmd">claude</span>
+
+<span class="comment"># Then tell Claude:</span>
+<span class="string">Set up the Percy agentic workflow from https://github.com/Peter202112/percy-agentic-workflow</span></code></pre>
+        <p style="margin-top: 12px; font-size: 13px; color: var(--neutral-500);">Claude will clone the repo, run the installer, and configure everything automatically. You can start using <code>@percy-orchestrator</code> immediately after.</p>
+    </div>
+
     <div class="install-box">
-        <h3>Quick Setup</h3>
+        <h3>Manual Setup</h3>
         <ol class="install-steps">
             <li>
-                <strong>Get the package</strong>
-                <div class="detail">Clone or download this repo</div>
+                <strong>Clone the workflow package</strong>
                 <pre><code><span class="cmd">git clone</span> https://github.com/Peter202112/percy-agentic-workflow.git</code></pre>
             </li>
             <li>
-                <strong>Go to your Percy monorepo</strong>
-                <div class="detail">The installer copies files into the current directory</div>
-                <pre><code><span class="cmd">cd</span> /path/to/percy</code></pre>
+                <strong>Run the installer from your Percy monorepo</strong>
+                <pre><code><span class="cmd">cd</span> /path/to/percy
+"<span class="cmd">/path/to/percy-agentic-workflow/install.sh</span>" <span class="flag">--all</span></code></pre>
+                <div class="detail">Quote the path if it contains spaces</div>
             </li>
             <li>
-                <strong>Run the installer</strong>
-                <div class="detail">One command sets up everything</div>
-                <pre><code>/path/to/percy-claude-workflow/<span class="cmd">install.sh</span> <span class="flag">--all</span></code></pre>
+                <strong>Start Claude Code and go</strong>
+                <pre><code><span class="cmd">claude</span>
+<span class="cmd">@percy-orchestrator</span> <span class="string">"your problem statement or PRD"</span></code></pre>
             </li>
         </ol>
     </div>
