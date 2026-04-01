@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percy Agentic Workflow</title>
+    <style>
+        :root {
+            --brand: #7B2FBE;
+            --brand-light: #F3ECFB;
+            --brand-dark: #5A1F8E;
+            --brand-subtle: #EDE5F7;
+            --success: #059669;
+            --success-light: #D1FAE5;
+            --info: #2563EB;
+            --info-light: #DBEAFE;
+            --warning: #D97706;
+            --warning-light: #FEF3C7;
+            --danger: #DC2626;
+            --neutral-50: #F8FAFC;
+            --neutral-100: #F1F5F9;
+            --neutral-200: #E2E8F0;
+            --neutral-300: #CBD5E1;
+            --neutral-400: #94A3B8;
+            --neutral-500: #64748B;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1E293B;
+            --neutral-900: #0F172A;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--neutral-800); background: var(--neutral-50); line-height: 1.65; font-size: 15px;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: white; padding: 64px 48px 56px; text-align: center;
+        }
+        .hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.5px; }
+        .hero p { font-size: 18px; opacity: 0.9; max-width: 640px; margin: 0 auto 24px; line-height: 1.55; }
+        .hero-stats {
+            display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 8px;
+        }
+        .hero-stat {
+            background: rgba(255,255,255,0.15); padding: 6px 20px; border-radius: 24px;
+            font-size: 14px; font-weight: 600; backdrop-filter: blur(4px);
+        }
+        .hero-stat strong { font-size: 20px; margin-right: 4px; }
+
+        /* ── Container ── */
+        .container { max-width: 900px; margin: 0 auto; padding: 48px; }
+
+        /* ── Section ── */
+        .section { margin-bottom: 56px; }
+        .section h2 {
+            font-size: 26px; color: var(--neutral-900); margin-bottom: 16px; padding-bottom: 10px;
+            border-bottom: 2px solid var(--neutral-200); letter-spacing: -0.3px;
+        }
+        .section h3 { font-size: 17px; color: var(--neutral-700); margin: 20px 0 8px; }
+        p { margin-bottom: 12px; }
+
+        /* ── Code ── */
+        pre {
+            background: var(--neutral-900); color: #E2E8F0; padding: 20px 24px; border-radius: 10px;
+            font-size: 13px; overflow-x: auto; margin: 14px 0; line-height: 1.7;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        }
+        code {
+            background: var(--neutral-100); padding: 2px 7px; border-radius: 5px;
+            font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        pre code { background: none; padding: 0; }
+        .comment { color: #64748B; }
+        .cmd { color: #A5F3FC; }
+        .flag { color: #FDE68A; }
+        .string { color: #86EFAC; }
+
+        /* ── Install Box ── */
+        .install-box {
+            background: white; border: 2px solid var(--brand); border-radius: 14px;
+            padding: 32px; margin-bottom: 32px; position: relative; overflow: hidden;
+        }
+        .install-box::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--brand), var(--brand-dark));
+        }
+        .install-box h3 { font-size: 20px; color: var(--brand-dark); margin-bottom: 16px; }
+        .install-steps { counter-reset: step; list-style: none; padding: 0; }
+        .install-steps li {
+            counter-increment: step; padding: 12px 0 12px 48px; position: relative;
+            border-bottom: 1px solid var(--neutral-100);
+        }
+        .install-steps li:last-child { border-bottom: none; }
+        .install-steps li::before {
+            content: counter(step); position: absolute; left: 0; top: 12px;
+            width: 32px; height: 32px; border-radius: 50%; background: var(--brand);
+            color: white; font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .install-steps li strong { display: block; margin-bottom: 4px; }
+        .install-steps li .detail { color: var(--neutral-500); font-size: 13px; }
+
+        /* ── Workflow Timeline ── */
+        .timeline { position: relative; padding-left: 40px; margin: 24px 0; }
+        .timeline::before {
+            content: ""; position: absolute; left: 15px; top: 8px; bottom: 8px;
+            width: 2px; background: var(--neutral-200);
+        }
+        .tl-item { position: relative; margin-bottom: 20px; }
+        .tl-dot {
+            position: absolute; left: -40px; top: 2px; width: 32px; height: 32px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 13px; color: white; z-index: 1;
+        }
+        .tl-dot.research { background: var(--brand); }
+        .tl-dot.build { background: var(--info); }
+        .tl-dot.check { background: var(--success); }
+        .tl-dot.gate { background: var(--warning); }
+        .tl-body h4 { font-size: 15px; margin-bottom: 2px; }
+        .tl-body p { font-size: 13px; color: var(--neutral-600); margin: 0; }
+        .tl-body .agent-tag {
+            display: inline-block; background: var(--brand-light); color: var(--brand-dark);
+            font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 4px;
+        }
+        .tl-body .output-tag {
+            display: inline-block; background: var(--neutral-100); color: var(--neutral-500);
+            font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-top: 4px; margin-left: 4px;
+        }
+        .tl-body .gate-badge {
+            display: inline-block; background: var(--warning-light); color: var(--warning);
+            font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+            margin-left: 6px; text-transform: uppercase;
+        }
+
+        /* ── Options Grid ── */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .opt {
+            border: 1px solid var(--neutral-200); border-radius: 8px; padding: 14px 16px;
+            background: white; font-size: 13px;
+        }
+        .opt code { font-size: 12px; }
+        .opt .opt-label { font-weight: 700; margin-bottom: 4px; color: var(--neutral-700); }
+        .opt .opt-desc { color: var(--neutral-500); }
+
+        /* ── Scoping Table ── */
+        table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+        th {
+            background: var(--neutral-100); text-align: left; padding: 10px 14px;
+            font-weight: 600; color: var(--neutral-700); border-bottom: 2px solid var(--neutral-200);
+        }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--neutral-200); }
+        tr:hover td { background: var(--neutral-50); }
+
+        /* ── Prereq Cards ── */
+        .prereqs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .prereq {
+            border: 1px solid var(--neutral-200); border-radius: 10px; padding: 16px 18px; background: white;
+        }
+        .prereq.required { border-left: 3px solid var(--brand); }
+        .prereq.optional { border-left: 3px solid var(--neutral-300); }
+        .prereq h4 { font-size: 14px; margin-bottom: 4px; }
+        .prereq p { font-size: 12px; color: var(--neutral-500); margin: 0; }
+        .prereq .tag-req {
+            display: inline-block; background: var(--brand-light); color: var(--brand);
+            font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-bottom: 6px;
+        }
+        .prereq .tag-opt {
+            display: inline-block; background: var(--neutral-100); color: var(--neutral-400);
+            font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-bottom: 6px;
+        }
+
+        /* ── Callout ── */
+        .callout {
+            background: var(--brand-light); border-left: 4px solid var(--brand);
+            padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px;
+        }
+        .callout strong { color: var(--brand-dark); }
+
+        /* ── File tree ── */
+        .file-tree {
+            background: var(--neutral-900); color: #CBD5E1; padding: 20px 24px;
+            border-radius: 10px; font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.9;
+        }
+        .file-tree .dir { color: #93C5FD; }
+        .file-tree .file { color: #A5F3FC; }
+        .file-tree .cm { color: #64748B; }
+        .file-tree .hl { color: #86EFAC; }
+
+        /* ── Links row ── */
+        .doc-links { display: flex; gap: 12px; margin: 16px 0; }
+        .doc-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--brand); color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; font-weight: 600; font-size: 14px; transition: background 0.15s;
+        }
+        .doc-link:hover { background: var(--brand-dark); }
+        .doc-link.secondary { background: white; color: var(--brand); border: 2px solid var(--brand); }
+        .doc-link.secondary:hover { background: var(--brand-light); }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center; padding: 32px 24px; color: var(--neutral-500); font-size: 13px;
+            border-top: 1px solid var(--neutral-200); margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .hero { padding: 40px 24px 36px; }
+            .hero h1 { font-size: 28px; }
+            .container { padding: 24px; }
+            .options-grid, .prereqs { grid-template-columns: 1fr; }
+            .hero-stats { gap: 12px; }
+        }
+        @media print {
+            .hero { background: var(--brand) !important; -webkit-print-color-adjust: exact; }
+            .tl-dot, .install-steps li::before { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+    <h1>Percy Agentic Workflow</h1>
+    <p>A multi-agent system for Claude Code that takes a problem statement through research, product definition, design exploration, implementation, and validation.</p>
+    <div class="hero-stats">
+        <span class="hero-stat"><strong>20</strong> agents</span>
+        <span class="hero-stat"><strong>17</strong> commands</span>
+        <span class="hero-stat"><strong>5</strong> skills</span>
+        <span class="hero-stat"><strong>9</strong> phases</span>
+        <span class="hero-stat"><strong>6</strong> review gates</span>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ── Install ── -->
+<section class="section" id="install">
+    <h2>Install</h2>
+
+    <div class="install-box">
+        <h3>Quick Setup</h3>
+        <ol class="install-steps">
+            <li>
+                <strong>Get the package</strong>
+                <div class="detail">Clone or download this repo</div>
+                <pre><code><span class="cmd">git clone</span> git@github.com:your-org/percy-claude-workflow.git</code></pre>
+            </li>
+            <li>
+                <strong>Go to your Percy monorepo</strong>
+                <div class="detail">The installer copies files into the current directory</div>
+                <pre><code><span class="cmd">cd</span> /path/to/percy</code></pre>
+            </li>
+            <li>
+                <strong>Run the installer</strong>
+                <div class="detail">One command sets up everything</div>
+                <pre><code>/path/to/percy-claude-workflow/<span class="cmd">install.sh</span> <span class="flag">--all</span></code></pre>
+            </li>
+        </ol>
+    </div>
+
+    <h3>Selective Install</h3>
+    <div class="options-grid">
+        <div class="opt">
+            <div class="opt-label"><code>--all</code></div>
+            <div class="opt-desc">Everything &mdash; full workflow + all reviewers + commands</div>
+        </div>
+        <div class="opt">
+            <div class="opt-label"><code>--workflow</code></div>
+            <div class="opt-desc">Research &rarr; PM &rarr; Design &rarr; Orchestrator only</div>
+        </div>
+        <div class="opt">
+            <div class="opt-label"><code>--web</code></div>
+            <div class="opt-desc">Percy-web review agents + commands</div>
+        </div>
+        <div class="opt">
+            <div class="opt-label"><code>--api</code></div>
+            <div class="opt-desc">Percy-api review agents + commands</div>
+        </div>
+        <div class="opt">
+            <div class="opt-label"><code>--dry-run</code></div>
+            <div class="opt-desc">Preview what would be installed without copying</div>
+        </div>
+        <div class="opt">
+            <div class="opt-label"><code>(no flags)</code></div>
+            <div class="opt-desc">Interactive mode &mdash; pick and choose</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Workflow ── -->
+<section class="section" id="workflow">
+    <h2>What It Does</h2>
+    <p>Provide a problem statement or PRD. The orchestrator walks you through 9 phases, producing an HTML review report at each gate.</p>
+
+    <div class="timeline">
+        <div class="tl-item">
+            <div class="tl-dot research">1</div>
+            <div class="tl-body">
+                <h4>Research</h4>
+                <p>Competitive analysis (Applitools, Chromatic, etc.), problem decomposition, 3 solution directions.</p>
+                <span class="agent-tag">@percy-researcher</span>
+                <span class="output-tag">reviews/research-{date}.html</span>
+                <span class="gate-badge">Review Gate</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot research">2</div>
+            <div class="tl-body">
+                <h4>Product Brief</h4>
+                <p>Reframes problem, defines user personas, features with acceptance criteria, implementation phases, success metrics.</p>
+                <span class="agent-tag">@percy-pm</span>
+                <span class="output-tag">reviews/product-brief-{date}.html</span>
+                <span class="gate-badge">Review Gate</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot research">3</div>
+            <div class="tl-body">
+                <h4>Design Exploration</h4>
+                <p>3 UI approaches mocked up in Figma using Percy&rsquo;s component library. Comparison matrix and recommendation.</p>
+                <span class="agent-tag">@percy-design-explorer</span>
+                <span class="output-tag">Figma file + HTML report</span>
+                <span class="gate-badge">Review Gate</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot gate">4</div>
+            <div class="tl-body">
+                <h4>Implementation Plan</h4>
+                <p>File-level change list, API contract mapping, dependency order.</p>
+                <span class="agent-tag">@percy-orchestrator</span>
+                <span class="output-tag">reviews/implementation-plan-{date}.html</span>
+                <span class="gate-badge">Review Gate</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot build">5</div>
+            <div class="tl-body">
+                <h4>API Implementation</h4>
+                <p>Migration &rarr; model &rarr; service &rarr; controller &rarr; serializer &rarr; specs. Spot-checked by review agents.</p>
+                <span class="agent-tag">percy-api agents</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot build">6</div>
+            <div class="tl-body">
+                <h4>Web Implementation</h4>
+                <p>Model &rarr; adapter &rarr; route &rarr; components &rarr; templates. Parallel after serializer is defined.</p>
+                <span class="agent-tag">percy-web agents</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot check">7</div>
+            <div class="tl-body">
+                <h4>Validation</h4>
+                <p>14+ agents check code quality, security, accessibility, design tokens, API contracts.</p>
+                <span class="agent-tag">percy-pr-validate</span>
+                <span class="output-tag">reviews/validation-{date}.html</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot check">8</div>
+            <div class="tl-body">
+                <h4>Usability Review</h4>
+                <p>Nielsen&rsquo;s 10 heuristics. Cross-referenced against PRD, competitor research, and chosen design.</p>
+                <span class="agent-tag">@percy-usability-reviewer</span>
+                <span class="output-tag">reviews/usability-review-{date}.html</span>
+                <span class="gate-badge">Review Gate</span>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot check">9</div>
+            <div class="tl-body">
+                <h4>CI + PR</h4>
+                <p>Buildkite CI monitoring, PR creation with summary, contract alignment, and report links.</p>
+                <span class="output-tag">reviews/pr-summary-{date}.html</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Prerequisites ── -->
+<section class="section" id="prereqs">
+    <h2>Prerequisites</h2>
+    <div class="prereqs">
+        <div class="prereq required">
+            <span class="tag-req">Required</span>
+            <h4>Claude Code</h4>
+            <p><code>npm i -g @anthropic-ai/claude-code</code></p>
+        </div>
+        <div class="prereq required">
+            <span class="tag-req">Required</span>
+            <h4>Opus Model Access</h4>
+            <p>Workflow agents use Opus for complex reasoning</p>
+        </div>
+        <div class="prereq optional">
+            <span class="tag-opt">Optional</span>
+            <h4>Figma Plugin</h4>
+            <p><code>/plugins enable figma</code> &mdash; for design mockups</p>
+        </div>
+        <div class="prereq optional">
+            <span class="tag-opt">Optional</span>
+            <h4>Atlassian Plugin</h4>
+            <p><code>/plugins enable atlassian</code> &mdash; for Jira integration</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Usage ── -->
+<section class="section" id="usage">
+    <h2>Usage</h2>
+    <pre><code><span class="cmd">cd</span> percy
+<span class="cmd">claude</span>
+
+<span class="comment"># Start from a problem statement</span>
+<span class="cmd">@percy-orchestrator</span> <span class="string">"Percy users spend too long reviewing diffs manually..."</span>
+
+<span class="comment"># Or start from a PRD</span>
+<span class="cmd">@percy-orchestrator</span> Here's the PRD: <span class="string">[paste]</span>
+
+<span class="comment"># Or use individual agents/commands directly</span>
+<span class="cmd">@percy-researcher</span> <span class="string">"How do competitors handle baseline management?"</span>
+<span class="cmd">/percy:endpoint-safety</span>
+<span class="cmd">/percy:design-system-check</span></code></pre>
+</section>
+
+<!-- ── Agent Scoping ── -->
+<section class="section" id="scoping">
+    <h2>Where Agents Live (and Why)</h2>
+    <p>Claude Code <strong>scopes agent discovery by working directory</strong>. This keeps each context clean &mdash; you only see relevant agents.</p>
+
+    <table>
+        <thead><tr><th>Location</th><th>Available When</th><th>Contains</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>.claude/agents/</code></td>
+                <td>Always &mdash; from any directory</td>
+                <td>Workflow agents (orchestrator, researcher, PM, design-explorer, usability-reviewer) and cross-repo agents (contract-reviewer)</td>
+            </tr>
+            <tr>
+                <td><code>percy-web/.claude/</code></td>
+                <td>Only in <code>percy-web/</code></td>
+                <td>Web review agents (design-system, component, ember-data, template, accessibility), web commands, web PR validation</td>
+            </tr>
+            <tr>
+                <td><code>percy-api/.claude/</code></td>
+                <td>Only in <code>percy-api/</code></td>
+                <td>API review agents (endpoint, job, spec, security, migration, etc.), API commands, API PR validation</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="callout">
+        <strong>Rule of thumb:</strong> If an agent reads/writes code in only one repo, it lives in that repo's <code>.claude/</code>. If it spans both repos or operates at the product level (research, design, usability), it lives at the root.
+    </div>
+</section>
+
+<!-- ── Docs ── -->
+<section class="section" id="docs">
+    <h2>Documentation</h2>
+    <p>After installing, open these in a browser for the full visual guides:</p>
+    <div class="doc-links">
+        <a href="percy-workflow-guide.html" class="doc-link">Workflow Guide</a>
+        <a href="percy-distribution-guide.html" class="doc-link secondary">Distribution Guide</a>
+    </div>
+    <pre><code><span class="cmd">open</span> .claude/percy-workflow-guide.html       <span class="comment"># Full visual guide</span>
+<span class="cmd">open</span> .claude/percy-distribution-guide.html   <span class="comment"># Distribution options</span></code></pre>
+</section>
+
+<!-- ── What's Included ── -->
+<section class="section" id="contents">
+    <h2>What&rsquo;s Included</h2>
+    <div class="file-tree">
+        <span class="dir">percy-claude-workflow/</span><br>
+        ├── <span class="hl">install.sh</span><span class="cm">                    # &larr; Run this</span><br>
+        ├── <span class="file">README.md</span><br>
+        ├── <span class="file">index.html</span><span class="cm">                   # This file</span><br>
+        ├── <span class="dir">root-agents/</span><span class="cm">                  # 6 workflow &amp; cross-repo agents</span><br>
+        │   ├── percy-orchestrator.md<br>
+        │   ├── percy-researcher.md<br>
+        │   ├── percy-pm.md<br>
+        │   ├── percy-design-explorer.md<br>
+        │   ├── percy-api-contract-reviewer.md<br>
+        │   └── percy-usability-reviewer.md<br>
+        ├── <span class="dir">root-skills/</span><span class="cm">                  # Report generator</span><br>
+        ├── <span class="dir">web-agents/</span><span class="cm">                   # 5 web review agents</span><br>
+        ├── <span class="dir">web-commands/</span><span class="cm">                 # 5 web commands</span><br>
+        ├── <span class="dir">web-skills/</span><span class="cm">                   # Web PR validation</span><br>
+        ├── <span class="dir">api-agents/</span><span class="cm">                   # 9 API review agents</span><br>
+        ├── <span class="dir">api-commands/</span><span class="cm">                 # 14 API commands</span><br>
+        ├── <span class="dir">api-skills/</span><span class="cm">                   # 3 API skills</span><br>
+        ├── <span class="file">percy-workflow-guide.html</span><br>
+        └── <span class="file">percy-distribution-guide.html</span><br>
+    </div>
+</section>
+
+<div class="footer">
+    Percy Agentic Workflow &middot; Built with Claude Code &middot; 20 agents &middot; 17 commands &middot; 5 skills
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

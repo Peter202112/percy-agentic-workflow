@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percy Agentic Workflow — Guide</title>
+    <style>
+        :root {
+            --brand: #7B2FBE;
+            --brand-light: #F3ECFB;
+            --brand-dark: #5A1F8E;
+            --brand-subtle: #EDE5F7;
+            --danger: #DC2626;
+            --danger-light: #FEE2E2;
+            --warning: #D97706;
+            --warning-light: #FEF3C7;
+            --success: #059669;
+            --success-light: #D1FAE5;
+            --info: #2563EB;
+            --info-light: #DBEAFE;
+            --neutral-50: #F8FAFC;
+            --neutral-100: #F1F5F9;
+            --neutral-200: #E2E8F0;
+            --neutral-300: #CBD5E1;
+            --neutral-400: #94A3B8;
+            --neutral-500: #64748B;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1E293B;
+            --neutral-900: #0F172A;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--neutral-800);
+            background: var(--neutral-50);
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        /* ── Header ── */
+        .hero {
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            color: white;
+            padding: 56px 48px 48px;
+        }
+        .hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .hero p { font-size: 18px; opacity: 0.9; max-width: 640px; line-height: 1.5; }
+        .hero .version { display: inline-block; background: rgba(255,255,255,0.2); padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 16px; }
+
+        /* ── Layout ── */
+        .page { display: flex; max-width: 1200px; margin: 0 auto; }
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            padding: 24px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--neutral-200);
+            background: white;
+        }
+        .sidebar a {
+            display: block;
+            padding: 6px 12px;
+            color: var(--neutral-600);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            margin-bottom: 2px;
+        }
+        .sidebar a:hover { background: var(--brand-light); color: var(--brand); }
+        .sidebar .group { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--neutral-400); margin: 16px 12px 6px; }
+        .main { flex: 1; padding: 32px 48px; min-width: 0; }
+
+        /* ── Sections ── */
+        .section { margin-bottom: 48px; }
+        .section h2 {
+            font-size: 24px; color: var(--neutral-900); margin-bottom: 16px; padding-bottom: 8px;
+            border-bottom: 2px solid var(--neutral-200);
+        }
+        .section h3 { font-size: 17px; color: var(--neutral-700); margin: 20px 0 8px; }
+        p { margin-bottom: 12px; }
+
+        /* ── Quick Start Box ── */
+        .quickstart {
+            background: var(--neutral-900); color: #E2E8F0; border-radius: 12px; padding: 24px 28px;
+            margin-bottom: 32px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 13px; line-height: 1.8;
+            overflow-x: auto;
+        }
+        .quickstart .comment { color: var(--neutral-400); }
+        .quickstart .cmd { color: #A5F3FC; }
+        .quickstart .string { color: #FDE68A; }
+
+        /* ── Workflow Diagram ── */
+        .workflow-flow { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+        .phase-card {
+            display: flex; align-items: stretch; border: 1px solid var(--neutral-200); background: white;
+            border-radius: 0; position: relative;
+        }
+        .phase-card:first-child { border-radius: 12px 12px 0 0; }
+        .phase-card:last-child { border-radius: 0 0 12px 12px; }
+        .phase-card + .phase-card { border-top: none; }
+        .phase-num {
+            width: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 800; color: white; background: var(--brand);
+        }
+        .phase-card.review-gate .phase-num { background: var(--warning); }
+        .phase-card.impl .phase-num { background: var(--info); }
+        .phase-body { padding: 16px 20px; flex: 1; }
+        .phase-body h4 { font-size: 15px; margin-bottom: 4px; }
+        .phase-body .agent { color: var(--brand); font-weight: 600; font-size: 13px; }
+        .phase-body .output { color: var(--neutral-500); font-size: 12px; margin-top: 4px; }
+        .phase-body .gate {
+            display: inline-block; background: var(--warning-light); color: var(--warning);
+            font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px;
+        }
+
+        /* ── Tables ── */
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+        th {
+            background: var(--neutral-100); text-align: left; padding: 10px 14px;
+            font-weight: 600; color: var(--neutral-700); border-bottom: 2px solid var(--neutral-200);
+        }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--neutral-200); }
+        tr:hover td { background: var(--neutral-50); }
+        td code {
+            background: var(--brand-light); color: var(--brand-dark); padding: 2px 7px;
+            border-radius: 4px; font-size: 12px; font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block; padding: 2px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .badge-workflow { background: var(--brand-light); color: var(--brand); }
+        .badge-review { background: var(--info-light); color: var(--info); }
+        .badge-command { background: var(--success-light); color: var(--success); }
+
+        /* ── Code blocks ── */
+        pre {
+            background: var(--neutral-900); color: #E2E8F0; padding: 16px 20px;
+            border-radius: 8px; font-size: 13px; overflow-x: auto; margin: 12px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; line-height: 1.6;
+        }
+        code {
+            background: var(--neutral-100); padding: 2px 6px; border-radius: 4px;
+            font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        pre code { background: none; padding: 0; }
+
+        /* ── Collapsible ── */
+        details { border: 1px solid var(--neutral-200); border-radius: 8px; margin-bottom: 8px; background: white; }
+        summary {
+            padding: 12px 16px; cursor: pointer; font-weight: 600; color: var(--neutral-700);
+            list-style: none; user-select: none;
+        }
+        summary::before { content: "▶  "; font-size: 11px; color: var(--neutral-400); }
+        details[open] summary::before { content: "▼  "; }
+        details .detail-body { padding: 0 16px 16px; }
+
+        /* ── Cards grid ── */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+        .card {
+            border: 1px solid var(--neutral-200); border-radius: 10px; padding: 20px;
+            background: white; transition: box-shadow 0.15s;
+        }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .card h4 { font-size: 15px; margin-bottom: 6px; color: var(--neutral-900); }
+        .card p { font-size: 13px; color: var(--neutral-600); margin: 0; }
+        .card .card-badge { margin-bottom: 10px; }
+
+        /* ── Suppression example ── */
+        .suppression-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+        .suppression-grid > div { font-size: 12px; }
+        .suppression-grid pre { font-size: 11px; padding: 10px 12px; }
+        .suppression-grid h5 { margin-bottom: 6px; color: var(--neutral-600); }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center; padding: 32px 24px; color: var(--neutral-500);
+            font-size: 13px; border-top: 1px solid var(--neutral-200); margin-top: 48px;
+        }
+
+        /* ── File tree ── */
+        .file-tree {
+            background: var(--neutral-900); color: #CBD5E1; padding: 20px 24px;
+            border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.8;
+        }
+        .file-tree .dir { color: #93C5FD; }
+        .file-tree .file { color: #A5F3FC; }
+        .file-tree .comment { color: #64748B; }
+        .file-tree .new { color: #86EFAC; }
+
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .hero, .main { padding: 24px; }
+            .suppression-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            .sidebar { display: none; }
+            .hero { background: var(--brand) !important; -webkit-print-color-adjust: exact; }
+            .page { display: block; }
+            .phase-num { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>Percy Agentic Workflow</h1>
+    <p>A multi-agent system for Claude Code that takes a problem statement through research, product definition, design exploration, implementation, QA verification, and PR creation — with <strong>mandatory user approval gates</strong> at every stage.</p>
+    <span class="version">20 agents &middot; 17 commands &middot; 8 skills &middot; 8 stages &middot; 9 approval gates</span>
+</div>
+
+<div class="page">
+<nav class="sidebar">
+    <div class="group">Getting Started</div>
+    <a href="#quickstart">Quick Start</a>
+    <a href="#workflow">Workflow Phases</a>
+    <div class="group">Reference</div>
+    <a href="#agent-scoping">Agent Scoping</a>
+    <a href="#workflow-agents">Workflow Agents</a>
+    <a href="#web-agents">Web Review Agents</a>
+    <a href="#api-agents">API Review Agents</a>
+    <a href="#commands">Commands</a>
+    <a href="#skills">Skills</a>
+    <div class="group">Usage</div>
+    <a href="#individual">Individual Agents</a>
+    <a href="#reports">Review Reports</a>
+    <a href="#suppression">Suppression</a>
+    <a href="#mcp">MCP Integrations</a>
+    <a href="#files">File Structure</a>
+</nav>
+
+<div class="main">
+
+<!-- ── Quick Start ── -->
+<section class="section" id="quickstart">
+    <h2>Quick Start</h2>
+    <div class="quickstart">
+        <span class="comment"># 1. Open the Percy monorepo in Claude Code</span><br>
+        <span class="cmd">cd</span> Percy<br>
+        <span class="cmd">claude</span><br><br>
+        <span class="comment"># 2. Start from a problem statement (gated workflow)</span><br>
+        <span class="cmd">/percy-orchestrator-gated</span> <span class="string">"Percy users spend too long reviewing visual<br>diffs manually. They have no way to prioritize which diffs matter most."</span><br><br>
+        <span class="comment"># 3. Or start from a PRD</span><br>
+        <span class="cmd">/percy-orchestrator-gated</span> Here's the PRD: <span class="string">[paste or reference file]</span><br><br>
+        <span class="comment"># 4. Run QA independently</span><br>
+        <span class="cmd">/percy-qa</span><br><br>
+        <span class="comment"># 5. Start local dev server</span><br>
+        <span class="cmd">/percy-local</span>
+    </div>
+    <p>The gated orchestrator guides you through 8 stages with 9 approval gates. Every stage pauses for your explicit approval — feedback loops back to re-run that stage. You can also invoke any agent individually — see <a href="#individual">Using Individual Agents</a>.</p>
+</section>
+
+<!-- ── Workflow ── -->
+<section class="section" id="workflow">
+    <h2>Workflow Stages</h2>
+    <p>Each stage produces an HTML report in <code>reviews/</code> and pauses at an approval gate. Feedback re-runs the current stage — no downstream work is wasted.</p>
+
+    <div class="workflow-flow">
+        <div class="phase-card review-gate">
+            <div class="phase-num">1</div>
+            <div class="phase-body">
+                <h4>Research</h4>
+                <span class="agent">percy-researcher + code-explorer</span>
+                <p>Competitive analysis, codebase mapping, 3 solution directions. Includes <strong>User Benefit Validation</strong>: problem solved, impact metric, alignment check.</p>
+                <div class="output">reviews/research-{feature}.html</div>
+                <span class="gate">🚦 Gate: Approve research findings + alignment</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate">
+            <div class="phase-num">2</div>
+            <div class="phase-body">
+                <h4>Product Brief</h4>
+                <span class="agent">percy-pm</span>
+                <p>Personas, phased deliverables, acceptance criteria, edge cases, success metrics.</p>
+                <div class="output">reviews/product-brief-{feature}.html</div>
+                <span class="gate">🚦 Gate: Approve scope + criteria</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate" style="border-left: 4px solid var(--warning);">
+            <div class="phase-num">3</div>
+            <div class="phase-body">
+                <h4>Design <span style="background:var(--warning-light);color:var(--warning);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;">MANDATORY</span></h4>
+                <span class="agent">percy-design-explorer + Figma MCP</span>
+                <p><strong>Blocks</strong> until user provides: (1) Figma page URL for mocks, (2) design system reference URL. Extracts tokens from reference, creates 3+ screens. After approval, mockups are <strong>embedded into the product brief</strong> (single source of truth).</p>
+                <div class="output">Figma mockups + reviews/design-exploration-{feature}.html + updated product brief</div>
+                <span class="gate">🚦 Gate: Approve mockup screenshots. Explicit "skip Figma" required to bypass.</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate">
+            <div class="phase-num">4</div>
+            <div class="phase-body">
+                <h4>Implementation Plan</h4>
+                <span class="agent">code-architect</span>
+                <p>DB schema, API models/services/controllers, Web models/components, file-by-file change list, data flow diagram. Uses updated product brief with embedded mockups.</p>
+                <div class="output">Architecture blueprint</div>
+                <span class="gate">🚦 Gate: Approve architecture + file list</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate">
+            <div class="phase-num">5</div>
+            <div class="phase-body">
+                <h4>Implementation (API + Web)</h4>
+                <span class="agent">Direct code writing</span>
+                <p>API: migration → models → services → job → serializer → controller → routes. Web: model → adapter → service → components → route. ESLint auto-fix.</p>
+                <span class="gate">🚦 Gate 5a: Approve API diff &nbsp;|&nbsp; 🚦 Gate 5b: Approve Web diff</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate">
+            <div class="phase-num">6</div>
+            <div class="phase-body">
+                <h4>QA Verification</h4>
+                <span class="agent">/percy-qa</span>
+                <p>Docker setup, API service specs, API request specs, frontend build, ESLint. Produces <strong>comprehensive test report</strong> with detailed test plan, suite, and cases (objective, steps, data, expected/actual, notes).</p>
+                <div class="output">reviews/testresults.md + testresults.html</div>
+                <span class="gate">🚦 Gate: Approve test results</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate">
+            <div class="phase-num">7</div>
+            <div class="phase-body">
+                <h4>Commit &amp; PR</h4>
+                <span class="agent">git + gh pr create</span>
+                <p>Commit in both repos with descriptive messages. Push and create PR only after approval.</p>
+                <span class="gate">🚦 Gate: Approve push to remote</span>
+            </div>
+        </div>
+        <div class="phase-card review-gate" style="border-left: 4px solid var(--info);">
+            <div class="phase-num">8</div>
+            <div class="phase-body">
+                <h4>Cleanup</h4>
+                <span class="agent">Infrastructure shutdown</span>
+                <p>Presents running resources (Docker, dev server, browser). Warns that restarting Docker takes 2-5 min. Three options: shut down all, keep Docker (recommended), keep everything. <strong>Default: keep everything running.</strong></p>
+                <span class="gate">🚦 Gate: Explicit approval required to shut down (default: keep running)</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Agent Scoping ── -->
+<section class="section" id="agent-scoping">
+    <h2>Why Agents Live Where They Do</h2>
+    <p>Claude Code <strong>scopes agent discovery by working directory</strong>. When you <code>cd percy-web && claude</code>, you see percy-web agents + root agents, but NOT percy-api agents (and vice versa). This keeps each context clean and relevant.</p>
+    <table>
+        <thead><tr><th>Location</th><th>Available When</th><th>What Goes Here</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>.claude/</code> (root)</td>
+                <td>Always &mdash; from any directory</td>
+                <td>Workflow agents (orchestrator, researcher, PM, design-explorer), cross-repo agents (contract reviewer, usability reviewer), shared skills</td>
+            </tr>
+            <tr>
+                <td><code>percy-web/.claude/</code></td>
+                <td>Only in percy-web</td>
+                <td>Web-specific reviewers (design-system, component, template, ember-data, accessibility), web commands, web PR validation</td>
+            </tr>
+            <tr>
+                <td><code>percy-api/.claude/</code></td>
+                <td>Only in percy-api</td>
+                <td>API-specific reviewers (endpoint, job, spec, security, migration, etc.), API commands, API PR validation</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 12px; color: var(--neutral-600); font-size: 13px;"><strong>Rule of thumb:</strong> If an agent reads/writes code in only one repo, it lives in that repo's <code>.claude/</code>. If it spans both repos or operates at the product level (research, design, usability), it lives at the root.</p>
+</section>
+
+<!-- ── Workflow Agents ── -->
+<section class="section" id="workflow-agents">
+    <h2>Workflow &amp; Cross-Repo Agents</h2>
+    <p>Located in <code>.claude/agents/</code> at the monorepo root. Available from any directory. These drive the PRD-to-delivery pipeline and cross-repo coordination.</p>
+    <table>
+        <thead><tr><th>Agent</th><th>Invoke</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><strong>percy-orchestrator</strong></td><td><code>@percy-orchestrator</code></td><td>Coordinates the full 9-phase workflow with review gates</td></tr>
+            <tr><td><strong>percy-researcher</strong></td><td><code>@percy-researcher</code></td><td>PM + UX research: problem decomposition, competitive analysis, 3 solution directions</td></tr>
+            <tr><td><strong>percy-pm</strong></td><td><code>@percy-pm</code></td><td>Reframes problems or PRDs, defines features/phases/metrics, produces product brief</td></tr>
+            <tr><td><strong>percy-design-explorer</strong></td><td><code>@percy-design-explorer</code></td><td>3 Figma mockups using Percy components, weighted comparison, recommendation</td></tr>
+            <tr><td><strong>percy-api-contract-reviewer</strong></td><td><code>@percy-api-contract-reviewer</code></td><td>Detects serializer &harr; Ember Data model drift across repos</td></tr>
+            <tr><td><strong>percy-usability-reviewer</strong></td><td><code>@percy-usability-reviewer</code></td><td>Post-implementation UX audit (Nielsen's 10 heuristics, cross-refs research &amp; PRD)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── Web Review Agents ── -->
+<section class="section" id="web-agents">
+    <h2>Web Review Agents</h2>
+    <p>Located in <code>percy-web/.claude/agents/</code>. Only available when working in percy-web. Enforce Ember, design system, and accessibility standards.</p>
+    <table>
+        <thead><tr><th>Agent</th><th>Rules</th><th>Focus</th></tr></thead>
+        <tbody>
+            <tr><td><strong>percy-design-system-reviewer</strong></td><td>11</td><td>Token compliance, no hardcoded colors, Percy component usage</td></tr>
+            <tr><td><strong>percy-component-reviewer</strong></td><td>11</td><td>Octane conventions, data-test attrs, import order, boolean naming</td></tr>
+            <tr><td><strong>percy-ember-data-reviewer</strong></td><td>8</td><td>Missing includes (#1 Sentry error), async/sync mismatches</td></tr>
+            <tr><td><strong>percy-template-reviewer</strong></td><td>8</td><td>Complex conditions to getters, deprecated syntax, raw HTML elements</td></tr>
+            <tr><td><strong>percy-accessibility-reviewer</strong></td><td>9</td><td>WCAG AA, ARIA roles, keyboard nav, focus management</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── API Review Agents ── -->
+<section class="section" id="api-agents">
+    <h2>API Review Agents</h2>
+    <p>Located in <code>percy-api/.claude/agents/</code>. Only available when working in percy-api. Enforce security, quality, and Rails conventions.</p>
+    <table>
+        <thead><tr><th>Agent</th><th>Rules</th><th>Focus</th></tr></thead>
+        <tbody>
+            <tr><td><strong>percy-endpoint-reviewer</strong></td><td>21</td><td>Auth gaps, IDOR, input contracts, Pundit policies</td></tr>
+            <tr><td><strong>percy-job-reviewer</strong></td><td>10</td><td>Idempotency, queue routing, arg safety</td></tr>
+            <tr><td><strong>percy-spec-reviewer</strong></td><td>11</td><td>Test quality, OpenAPI metadata, factory hygiene</td></tr>
+            <tr><td><strong>percy-security-reviewer</strong></td><td>20+</td><td>Secrets, crypto, SSRF, CORS, VCR leaks</td></tr>
+            <tr><td><strong>percy-migration-reviewer</strong></td><td>11</td><td>Ghost migrations, restricted tables, schema drift</td></tr>
+            <tr><td><strong>percy-code-quality-reviewer</strong></td><td>&mdash;</td><td>N+1, magic literals, duplicate logic</td></tr>
+            <tr><td><strong>percy-lint-reviewer</strong></td><td>&mdash;</td><td>RuboCop compliance</td></tr>
+            <tr><td><strong>percy-data-compliance-reviewer</strong></td><td>&mdash;</td><td>GDPR, PII, deletion pipeline</td></tr>
+            <tr><td><strong>percy-performance-reviewer</strong></td><td>&mdash;</td><td>Query optimization, caching, Redis patterns</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── Commands ── -->
+<section class="section" id="commands">
+    <h2>Commands</h2>
+
+    <details open>
+        <summary>Web Commands (3)</summary>
+        <div class="detail-body">
+            <table>
+                <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+                <tbody>
+                    <tr><td><code>/percy:component-review</code></td><td>Quick Ember component quality check</td></tr>
+                    <tr><td><code>/percy:design-system-check</code></td><td>Quick design token compliance check</td></tr>
+                    <tr><td><code>/percy:ember-data-debug [model]</code></td><td>Trace full data flow for a resource</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+
+    <details>
+        <summary>API Commands (14)</summary>
+        <div class="detail-body">
+            <table>
+                <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+                <tbody>
+                    <tr><td><code>/percy:planner [type] [desc]</code></td><td>Pre-code implementation checklist</td></tr>
+                    <tr><td><code>/percy:endpoint-safety</code></td><td>Auth/IDOR validation</td></tr>
+                    <tr><td><code>/percy:job-safety</code></td><td>Sidekiq job safety</td></tr>
+                    <tr><td><code>/percy:spec-review</code></td><td>Test quality check</td></tr>
+                    <tr><td><code>/percy:security-review</code></td><td>Security scan</td></tr>
+                    <tr><td><code>/percy:n-plus-one</code></td><td>Query performance</td></tr>
+                    <tr><td><code>/percy:redis-review</code></td><td>Redis usage validation</td></tr>
+                    <tr><td><code>/percy:code-quality</code></td><td>Convention check</td></tr>
+                    <tr><td><code>/percy:openapi-compliance</code></td><td>Request spec metadata</td></tr>
+                    <tr><td><code>/percy:feature-flag-audit</code></td><td>LaunchDarkly flag consistency</td></tr>
+                    <tr><td><code>/percy:gdpr-compliance</code></td><td>Data compliance</td></tr>
+                    <tr><td><code>/percy:endpoint-audit</code></td><td>Full endpoint lifecycle trace</td></tr>
+                    <tr><td><code>/percy:debug-job-flow</code></td><td>Sidekiq job execution trace</td></tr>
+                    <tr><td><code>/percy:debug-logs</code></td><td>Container log reader</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+</section>
+
+<!-- ── Skills ── -->
+<section class="section" id="skills">
+    <h2>Skills</h2>
+    <table>
+        <thead><tr><th>Skill</th><th>Invoke</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><strong>percy-orchestrator-gated</strong></td><td><code>/percy-orchestrator-gated</code></td><td>Full 8-stage gated workflow with 9 approval gates. Mandatory Figma, feedback loops, cleanup.</td></tr>
+            <tr><td><strong>percy-qa</strong></td><td><code>/percy-qa</code></td><td>Comprehensive QA pipeline: Docker → API specs → frontend build → ESLint → detailed test report</td></tr>
+            <tr><td><strong>percy-local</strong></td><td><code>/percy-local</code></td><td>Start percy-web at localhost:4200 with production backend + auth token</td></tr>
+            <tr><td><strong>percy-pr-validate</strong> (API)</td><td><code>/percy-pr-validate</code></td><td>Routes to 9 review agents based on changed files</td></tr>
+            <tr><td><strong>percy-pr-validate</strong> (Web)</td><td><code>/percy-pr-validate</code></td><td>Routes to 5 review agents based on changed files</td></tr>
+            <tr><td><strong>percy-report-generator</strong></td><td>Auto</td><td>HTML report template for all review gates</td></tr>
+            <tr><td><strong>percy-migration-review</strong></td><td><code>/percy-migration-review</code></td><td>Migration safety validation</td></tr>
+            <tr><td><strong>percy-ci-monitor</strong></td><td><code>/percy-ci-monitor</code></td><td>Buildkite pipeline monitoring</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── Individual Usage ── -->
+<section class="section" id="individual">
+    <h2>Using Individual Agents</h2>
+    <p>You don't need the full workflow. Invoke any agent directly:</p>
+    <div class="card-grid">
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-workflow">Workflow</span></div>
+            <h4>Research a problem</h4>
+            <p><code>@percy-researcher "How should Percy handle baseline management for monorepos?"</code></p>
+        </div>
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-workflow">Workflow</span></div>
+            <h4>Get a product brief</h4>
+            <p><code>@percy-pm "We need auto-approve for diffs matching known patterns"</code></p>
+        </div>
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-review">Review</span></div>
+            <h4>Check design tokens</h4>
+            <p><code>@percy-design-system-reviewer app/components/build-card.hbs</code></p>
+        </div>
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-command">Command</span></div>
+            <h4>Validate a PR</h4>
+            <p><code>/percy:percy-pr-validate</code></p>
+        </div>
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-command">Command</span></div>
+            <h4>Debug Ember Data</h4>
+            <p><code>/percy:ember-data-debug build</code></p>
+        </div>
+        <div class="card">
+            <div class="card-badge"><span class="badge badge-command">Command</span></div>
+            <h4>Check endpoint safety</h4>
+            <p><code>/percy:endpoint-safety app/controllers/api/v1/builds_controller.rb</code></p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Reports ── -->
+<section class="section" id="reports">
+    <h2>Review Reports</h2>
+    <p>All HTML reports are self-contained (inline CSS, no external dependencies). Open in any browser. The product brief is the single source of truth — it includes embedded mockup screenshots after design approval.</p>
+    <pre><code>reviews/
+├── research-{feature}.html              # Stage 1: Competitive analysis + user benefit validation
+├── product-brief-{feature}.html         # Stage 2+3: Brief + embedded Figma mockup screenshots
+├── design-exploration-{feature}.html    # Stage 3: 3 approaches, comparison matrix
+├── testresults.md                       # Stage 6: Detailed test plan, suites, cases (markdown)
+├── testresults.html                     # Stage 6: Styled test report (HTML)
+├── validation-{feature}.html            # Stage 6: Validation summary
+├── screenshot-*.png                     # Stage 5: Browser automation screenshots
+└── test-results-{feature}.html          # Stage 6: Full pass/fail with spec output</code></pre>
+</section>
+
+<!-- ── Suppression ── -->
+<section class="section" id="suppression">
+    <h2>Suppression</h2>
+    <p>All review agents support <code>percy:ignore {rule-id} - {reason}</code>. Suppressed findings are tracked in reports, not hidden.</p>
+    <div class="suppression-grid">
+        <div>
+            <h5>Ruby (percy-api)</h5>
+            <pre><code># percy:ignore endpoint-safety/unguarded-skip-authorization - superuser verified</code></pre>
+        </div>
+        <div>
+            <h5>Handlebars (percy-web)</h5>
+            <pre><code>{{!-- percy:ignore design-system/hardcoded-color - legacy pending migration --}}</code></pre>
+        </div>
+        <div>
+            <h5>JavaScript (percy-web)</h5>
+            <pre><code>// percy:ignore component/magic-number - timeout from API spec</code></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ── MCP ── -->
+<section class="section" id="mcp">
+    <h2>MCP Integrations</h2>
+    <table>
+        <thead><tr><th>MCP Server</th><th>Used By</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Figma</strong></td><td>percy-design-explorer</td><td>Create mockups, search Percy component library</td></tr>
+            <tr><td><strong>Atlassian</strong></td><td>percy-orchestrator</td><td>Link Jira tickets, fetch requirements</td></tr>
+            <tr><td><strong>Context7</strong></td><td>percy-researcher</td><td>Fetch framework documentation</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── File Structure ── -->
+<section class="section" id="files">
+    <h2>File Structure</h2>
+    <div class="file-tree">
+        <span class="dir">Percy/</span><br>
+        ├── CLAUDE.md<span class="comment">                              # Monorepo instructions</span><br>
+        ├── <span class="dir">.claude/</span><br>
+        │   ├── README.md<span class="comment">                          # Documentation</span><br>
+        │   ├── <span class="dir">agents/</span><br>
+        │   │   ├── <span class="new">percy-orchestrator.md</span><span class="comment">          # 9-phase coordinator</span><br>
+        │   │   ├── <span class="new">percy-researcher.md</span><span class="comment">            # PM + UX research</span><br>
+        │   │   ├── <span class="new">percy-pm.md</span><span class="comment">                    # Product manager</span><br>
+        │   │   ├── <span class="new">percy-design-explorer.md</span><span class="comment">       # Design + Figma</span><br>
+        │   │   ├── <span class="new">percy-api-contract-reviewer.md</span><span class="comment"> # Contract validation</span><br>
+        │   │   └── <span class="new">percy-usability-reviewer.md</span><span class="comment">    # UX audit (cross-repo)</span><br>
+        │   └── <span class="dir">skills/</span><br>
+        │       └── <span class="new">percy-report-generator/SKILL.md</span><span class="comment"> # HTML report template</span><br>
+        ├── <span class="new">reviews/</span><span class="comment">                               # HTML reports (gitignored)</span><br>
+        ├── <span class="dir">percy-api/.claude/</span><br>
+        │   ├── <span class="dir">agents/</span><span class="comment">                            # 9 API review agents</span><br>
+        │   ├── <span class="dir">commands/percy/</span><span class="comment">                    # 14 API commands</span><br>
+        │   └── <span class="dir">skills/</span><span class="comment">                            # 3 API skills</span><br>
+        └── <span class="dir">percy-web/.claude/</span><br>
+            ├── <span class="dir">agents/</span><span class="comment">                            # 5 Web review agents</span><br>
+            ├── <span class="dir">commands/percy/</span><span class="comment">                    # 3 Web commands</span><br>
+            └── <span class="dir">skills/percy-pr-validate/</span><span class="comment">          # Web PR validation</span><br>
+    </div>
+    <p style="margin-top: 12px; font-size: 13px; color: var(--neutral-500);"><span style="color: #86EFAC;">Green</span> = created in this setup session</p>
+</section>
+
+<div class="footer">
+    Percy Agentic Workflow &middot; Built with Claude Code &middot; 20 agents &middot; 17 commands &middot; 8 skills &middot; 9 approval gates
+</div>
+
+</div><!-- /main -->
+</div><!-- /page -->
+
+</body>
+</html>

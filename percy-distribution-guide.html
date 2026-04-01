@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percy Agentic Workflow — Distribution Guide</title>
+    <style>
+        :root {
+            --brand: #7B2FBE;
+            --brand-light: #F3ECFB;
+            --brand-dark: #5A1F8E;
+            --success: #059669;
+            --success-light: #D1FAE5;
+            --info: #2563EB;
+            --info-light: #DBEAFE;
+            --warning: #D97706;
+            --warning-light: #FEF3C7;
+            --neutral-50: #F8FAFC;
+            --neutral-100: #F1F5F9;
+            --neutral-200: #E2E8F0;
+            --neutral-300: #CBD5E1;
+            --neutral-400: #94A3B8;
+            --neutral-500: #64748B;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1E293B;
+            --neutral-900: #0F172A;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--neutral-800); background: var(--neutral-50); line-height: 1.65; font-size: 15px;
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--brand-dark), #3B1466);
+            color: white; padding: 48px 48px 40px;
+        }
+        .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+        .hero p { font-size: 17px; opacity: 0.9; max-width: 600px; }
+        .container { max-width: 860px; margin: 0 auto; padding: 40px 48px; }
+        .section { margin-bottom: 48px; }
+        .section h2 {
+            font-size: 22px; color: var(--neutral-900); margin-bottom: 16px;
+            padding-bottom: 8px; border-bottom: 2px solid var(--neutral-200);
+        }
+        .section h3 { font-size: 17px; color: var(--neutral-700); margin: 20px 0 8px; }
+        p { margin-bottom: 12px; }
+        pre {
+            background: var(--neutral-900); color: #E2E8F0; padding: 16px 20px;
+            border-radius: 8px; font-size: 13px; overflow-x: auto; margin: 12px 0;
+            font-family: 'SF Mono', 'Fira Code', monospace; line-height: 1.6;
+        }
+        code {
+            background: var(--neutral-100); padding: 2px 6px; border-radius: 4px;
+            font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        pre code { background: none; padding: 0; }
+
+        /* Option cards */
+        .option-card {
+            border: 2px solid var(--neutral-200); border-radius: 12px;
+            padding: 24px; margin-bottom: 20px; background: white;
+            transition: border-color 0.15s;
+        }
+        .option-card:hover { border-color: var(--brand); }
+        .option-card.recommended { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); }
+        .option-card h3 {
+            font-size: 18px; margin: 0 0 4px; display: flex; align-items: center; gap: 10px;
+        }
+        .option-card .subtitle { color: var(--neutral-500); font-size: 13px; margin-bottom: 12px; }
+        .option-card .tag {
+            display: inline-block; padding: 2px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .tag-recommended { background: var(--brand-light); color: var(--brand); }
+        .tag-flexible { background: var(--info-light); color: var(--info); }
+        .tag-portable { background: var(--success-light); color: var(--success); }
+        .tag-global { background: var(--warning-light); color: var(--warning); }
+
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+        .pros h4 { color: var(--success); font-size: 13px; margin-bottom: 4px; }
+        .cons h4 { color: #DC2626; font-size: 13px; margin-bottom: 4px; }
+        .pros li, .cons li { font-size: 13px; margin-bottom: 3px; color: var(--neutral-600); }
+        ul { padding-left: 20px; margin: 8px 0; }
+        li { margin-bottom: 4px; }
+
+        /* Checklist */
+        .checklist { list-style: none; padding: 0; }
+        .checklist li {
+            padding: 10px 16px; border-bottom: 1px solid var(--neutral-200);
+            display: flex; align-items: center; gap: 10px; font-size: 14px;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .check { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; }
+        .check-required { background: var(--brand-light); color: var(--brand); }
+        .check-optional { background: var(--neutral-100); color: var(--neutral-400); }
+        .checklist .label { font-weight: 600; }
+        .checklist .desc { color: var(--neutral-500); font-size: 13px; }
+
+        /* Steps */
+        .step {
+            display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start;
+        }
+        .step-num {
+            width: 32px; height: 32px; border-radius: 50%; background: var(--brand);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; flex-shrink: 0;
+        }
+        .step-body { flex: 1; }
+        .step-body h4 { font-size: 15px; margin-bottom: 4px; }
+        .step-body p { font-size: 14px; color: var(--neutral-600); margin: 0; }
+
+        table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+        th { background: var(--neutral-100); text-align: left; padding: 10px 14px; font-weight: 600; border-bottom: 2px solid var(--neutral-200); }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--neutral-200); }
+
+        .callout {
+            background: var(--brand-light); border-left: 4px solid var(--brand);
+            padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0;
+        }
+        .callout strong { color: var(--brand-dark); }
+
+        .footer {
+            text-align: center; padding: 32px 24px; color: var(--neutral-500);
+            font-size: 13px; border-top: 1px solid var(--neutral-200); margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .hero, .container { padding: 24px; }
+            .pros-cons { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            .hero { background: var(--brand-dark) !important; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>Distribution Guide</h1>
+    <p>How to share the Percy Agentic Workflow with your team and other projects.</p>
+</div>
+
+<div class="container">
+
+<!-- ── How it works ── -->
+<section class="section">
+    <h2>How It Works</h2>
+    <p>The Percy agentic workflow is <strong>pure markdown files</strong> &mdash; no npm packages, no compiled code, no runtime dependencies. Claude Code automatically discovers agents, skills, and commands from <code>.claude/</code> directories. Distribution is file copying.</p>
+    <div class="callout">
+        <strong>Key insight:</strong> Anyone who has the <code>.claude/</code> files in their repo can use <code>@percy-orchestrator</code>, <code>/percy:endpoint-safety</code>, etc. immediately. No installation step, no configuration.
+    </div>
+</section>
+
+<!-- ── Distribution Options ── -->
+<section class="section">
+    <h2>Distribution Options</h2>
+
+    <div class="option-card recommended">
+        <h3>
+            Option 1: Commit to the Repo
+            <span class="tag tag-recommended">Recommended</span>
+        </h3>
+        <div class="subtitle">Best for: Percy team members working in the monorepo</div>
+        <p>Commit the <code>.claude/</code> directories to the Percy monorepo. Every developer who clones the repo gets the agents automatically.</p>
+        <pre><code>git add .claude/ percy-web/.claude/ percy-api/.claude/ reviews/.gitkeep
+git commit -m "Add Percy agentic workflow for Claude Code"
+git push</code></pre>
+        <div class="pros-cons">
+            <div class="pros"><h4>Pros</h4><ul><li>Zero setup for teammates</li><li>Agents evolve with the codebase</li><li>PRs can update agents alongside code</li></ul></div>
+            <div class="cons"><h4>Cons</h4><ul><li>Repo-specific, not reusable elsewhere</li></ul></div>
+        </div>
+    </div>
+
+    <div class="option-card">
+        <h3>
+            Option 2: Setup Script
+            <span class="tag tag-flexible">Flexible</span>
+        </h3>
+        <div class="subtitle">Best for: Installing into forks, branches, or fresh clones</div>
+        <p>Use the included <code>setup.sh</code> to copy agents selectively:</p>
+        <pre><code># Install everything
+.claude/setup.sh --all
+
+# Into a different repo
+.claude/setup.sh --all --target /path/to/other-repo
+
+# Just the workflow agents (research, PM, design, orchestrator)
+.claude/setup.sh --workflow
+
+# Just the code review agents
+.claude/setup.sh --web-reviewers
+.claude/setup.sh --api-reviewers
+
+# Interactive mode — pick and choose
+.claude/setup.sh</code></pre>
+        <div class="pros-cons">
+            <div class="pros"><h4>Pros</h4><ul><li>Install only what you need</li><li>Works across repo copies</li><li>Interactive or scripted</li></ul></div>
+            <div class="cons"><h4>Cons</h4><ul><li>Manual re-run on updates</li></ul></div>
+        </div>
+    </div>
+
+    <div class="option-card">
+        <h3>
+            Option 3: Template Repo
+            <span class="tag tag-portable">Portable</span>
+        </h3>
+        <div class="subtitle">Best for: Sharing across teams, orgs, or open-sourcing</div>
+        <p>Extract the setup into its own Git repo:</p>
+        <pre><code># Create the template repo
+mkdir percy-claude-agents && cd percy-claude-agents && git init
+
+# Copy agent definitions
+cp -r /path/to/Percy/.claude .
+cp -r /path/to/Percy/percy-web/.claude percy-web/.claude
+cp -r /path/to/Percy/percy-api/.claude percy-api/.claude
+
+git add -A && git commit -m "Percy agentic workflow template"
+git remote add origin git@github.com:your-org/percy-claude-agents.git
+git push -u origin main</code></pre>
+        <p>Consumers clone and run setup:</p>
+        <pre><code>git clone git@github.com:your-org/percy-claude-agents.git /tmp/percy-agents
+/tmp/percy-agents/.claude/setup.sh --all --target /path/to/their-repo</code></pre>
+        <div class="pros-cons">
+            <div class="pros"><h4>Pros</h4><ul><li>Versioned independently (tag releases)</li><li>Shareable across teams/orgs</li><li>Can publish as open-source</li></ul></div>
+            <div class="cons"><h4>Cons</h4><ul><li>Extra repo to maintain</li><li>Consumers re-run setup on updates</li></ul></div>
+        </div>
+    </div>
+
+    <div class="option-card">
+        <h3>
+            Option 4: User-Level Install
+            <span class="tag tag-global">Global</span>
+        </h3>
+        <div class="subtitle">Best for: Personal use across all projects</div>
+        <p>Install to <code>~/.claude/</code> so agents are available everywhere:</p>
+        <pre><code># Workflow agents
+cp -r .claude/agents/* ~/.claude/agents/
+
+# Skills
+cp -r .claude/skills/* ~/.claude/skills/</code></pre>
+        <div class="pros-cons">
+            <div class="pros"><h4>Pros</h4><ul><li>Available in every Claude Code session</li><li>No per-repo setup</li></ul></div>
+            <div class="cons"><h4>Cons</h4><ul><li>Percy-specific agents may not fit other projects</li><li>No per-project customization</li></ul></div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Agent Scoping ── -->
+<section class="section">
+    <h2>Understanding Agent Scoping</h2>
+    <p>Claude Code <strong>scopes agent discovery by working directory</strong>. This is why agents live in different <code>.claude/</code> directories across the monorepo.</p>
+
+    <div class="callout">
+        <strong>Rule of thumb:</strong> If an agent reads/writes code in only one repo, it lives in that repo's <code>.claude/</code>. If it spans both repos or operates at the product level (research, design, usability), it lives at the root.
+    </div>
+
+    <table>
+        <thead><tr><th>Location</th><th>Available When</th><th>What Goes Here</th></tr></thead>
+        <tbody>
+            <tr>
+                <td><code>.claude/</code> (root)</td>
+                <td>Always &mdash; from any directory in the monorepo</td>
+                <td>Workflow agents (orchestrator, researcher, PM, design-explorer), cross-repo agents (contract reviewer, usability reviewer), shared skills (report generator)</td>
+            </tr>
+            <tr>
+                <td><code>percy-web/.claude/</code></td>
+                <td>Only when <code>cd percy-web</code></td>
+                <td>Web-specific reviewers (design-system, component, template, ember-data, accessibility), web commands, web PR validation</td>
+            </tr>
+            <tr>
+                <td><code>percy-api/.claude/</code></td>
+                <td>Only when <code>cd percy-api</code></td>
+                <td>API-specific reviewers (endpoint, job, spec, security, migration, etc.), API commands, API PR validation</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>This means when distributing, <strong>the directory structure matters</strong>. The setup script preserves the correct structure automatically. If copying manually, ensure agents end up in the right <code>.claude/</code> directory.</p>
+</section>
+
+<!-- ── What Consumers Need ── -->
+<section class="section">
+    <h2>What Consumers Need</h2>
+
+    <ul class="checklist">
+        <li>
+            <span class="check check-required">&#10003;</span>
+            <div>
+                <div class="label">Claude Code</div>
+                <div class="desc">Installed and authenticated (<code>npm i -g @anthropic-ai/claude-code && claude auth login</code>)</div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-required">&#10003;</span>
+            <div>
+                <div class="label">Claude Opus model access</div>
+                <div class="desc">Orchestrator, researcher, PM, and design-explorer require Opus for complex reasoning</div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-required">&#10003;</span>
+            <div>
+                <div class="label">The .claude/ files</div>
+                <div class="desc">Copied to the right locations via any distribution option above</div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-optional">&#9675;</span>
+            <div>
+                <div class="label">Figma MCP plugin</div>
+                <div class="desc">Optional &mdash; enables the design explorer to create Figma mockups. Enable: <code>/plugins enable figma</code></div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-optional">&#9675;</span>
+            <div>
+                <div class="label">Atlassian MCP plugin</div>
+                <div class="desc">Optional &mdash; enables Jira ticket linking and requirement fetching. Enable: <code>/plugins enable atlassian</code></div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-optional">&#9675;</span>
+            <div>
+                <div class="label">agent-browser</div>
+                <div class="desc">Optional &mdash; enables visual verification in QA pipeline. Install: <code>npm i -g agent-browser && agent-browser install</code></div>
+            </div>
+        </li>
+        <li>
+            <span class="check check-optional">&#9675;</span>
+            <div>
+                <div class="label">Docker (Colima)</div>
+                <div class="desc">Optional &mdash; required for API tests in QA pipeline. Install: <code>brew install colima docker docker-compose</code></div>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<!-- ── Customization ── -->
+<section class="section">
+    <h2>Customization</h2>
+    <p>Everything is plain markdown &mdash; edit directly, no build step needed.</p>
+
+    <h3>Modify Existing Rules</h3>
+    <p>Open any agent <code>.md</code> file, edit the rules section. Changes take effect on the next invocation.</p>
+
+    <h3>Add a New Agent</h3>
+    <p>Create a <code>.md</code> file in <code>.claude/agents/</code>:</p>
+    <pre><code>---
+name: my-custom-agent
+description: "What this agent does and when to invoke it."
+---
+
+Your agent prompt here...</code></pre>
+    <p>Invoke with <code>@my-custom-agent</code> in Claude Code.</p>
+
+    <h3>Add a New Command</h3>
+    <p>Create a <code>.md</code> file in <code>.claude/commands/percy/</code>:</p>
+    <pre><code>---
+description: What this command does
+allowed-tools: Read, Glob, Grep, Bash
+---
+
+# Command Name
+
+Instructions...</code></pre>
+    <p>Invoke with <code>/percy:command-name</code>.</p>
+
+    <h3>Override Precedence</h3>
+    <p>Project-level <code>.claude/</code> overrides user-level <code>~/.claude/</code>. Use this for project-specific customizations.</p>
+</section>
+
+<!-- ── Updating ── -->
+<section class="section">
+    <h2>Keeping Up to Date</h2>
+    <table>
+        <thead><tr><th>Distribution</th><th>How to Update</th></tr></thead>
+        <tbody>
+            <tr><td>Committed to repo</td><td>Just <code>git pull</code>. Updates arrive with code.</td></tr>
+            <tr><td>Setup script</td><td>Re-run <code>.claude/setup.sh --all</code> to overwrite with latest.</td></tr>
+            <tr><td>Template repo</td><td>Pull latest template, re-run setup script.</td></tr>
+            <tr><td>User-level</td><td>Re-copy updated files to <code>~/.claude/</code>.</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ── Inventory ── -->
+<section class="section">
+    <h2>What's Included</h2>
+    <table>
+        <thead><tr><th>Component</th><th>Count</th><th>Location</th></tr></thead>
+        <tbody>
+            <tr><td>Workflow &amp; cross-repo agents</td><td>6</td><td><code>.claude/agents/</code></td></tr>
+            <tr><td>Web review agents</td><td>5</td><td><code>percy-web/.claude/agents/</code></td></tr>
+            <tr><td>API review agents</td><td>9</td><td><code>percy-api/.claude/agents/</code></td></tr>
+            <tr><td>Web commands</td><td>3</td><td><code>percy-web/.claude/commands/percy/</code></td></tr>
+            <tr><td>API commands</td><td>14</td><td><code>percy-api/.claude/commands/percy/</code></td></tr>
+            <tr><td>Root skills</td><td>4</td><td><code>.claude/skills/</code> — orchestrator-gated, qa, local, report-generator</td></tr>
+            <tr><td>Web skills</td><td>1</td><td><code>percy-web/.claude/skills/</code> — pr-validate</td></tr>
+            <tr><td>API skills</td><td>3</td><td><code>percy-api/.claude/skills/</code> — pr-validate, migration-review, ci-monitor</td></tr>
+            <tr><td>Setup script</td><td>1</td><td><code>.claude/setup.sh</code></td></tr>
+            <tr><td>Documentation</td><td>4</td><td><code>.claude/README.md</code>, guides, this file</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<div class="footer">
+    Percy Agentic Workflow &middot; Distribution Guide &middot; 20 agents &middot; 8 skills &middot; 9 approval gates
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
