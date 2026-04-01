@@ -17,7 +17,7 @@ git clone https://github.com/Peter202112/percy-agentic-workflow.git
 cd /path/to/percy && claude
 
 # 4. Run the gated workflow
-/percy-orchestrator-gated "As an SDET, I want to reduce repetitive review work..."
+@percy-orchestrator "As an SDET, I want to reduce repetitive review work..."
 ```
 
 Or install selectively:
@@ -85,13 +85,13 @@ Docker containers only shut down with explicit approval. Warns about 2-5 min res
 ### Feedback Loops
 Every gate accepts "approve" or "feedback". Feedback re-runs the current stage with your context — the system never wastes work on downstream stages built on unapproved artifacts.
 
-## Skills
+## Agents & Skills
 
-| Skill | Invoke | Purpose |
-|-------|--------|---------|
-| **percy-orchestrator-gated** | `/percy-orchestrator-gated` | Full 8-stage gated workflow |
-| **percy-qa** | `/percy-qa` | QA pipeline with detailed test reports |
-| **percy-local** | `/percy-local` | Start percy-web at localhost:4200 |
+| Name | Invoke | Type | Purpose |
+|------|--------|------|---------|
+| **percy-orchestrator** | `@percy-orchestrator` | Agent | Full 8-stage gated workflow with 9 approval gates |
+| **percy-qa** | `/percy-qa` | Skill | QA pipeline with detailed test reports |
+| **percy-local** | `/percy-local` | Skill | Start percy-web at localhost:4200 |
 
 ## Prerequisites
 

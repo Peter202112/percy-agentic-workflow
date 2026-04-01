@@ -194,7 +194,7 @@ else
     echo ""
     echo "Next steps:"
     echo "  1. cd $TARGET && claude"
-    echo "  2. /percy-orchestrator-gated \"your problem statement or PRD\""
+    echo "  2. @percy-orchestrator \"your problem statement or PRD\""
     echo ""
     echo "Documentation:"
     echo "  open $TARGET/.claude/percy-workflow-guide.html"

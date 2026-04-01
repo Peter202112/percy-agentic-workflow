@@ -419,10 +419,10 @@
 <span class="cmd">claude</span>
 
 <span class="comment"># Start the gated workflow from a problem statement</span>
-<span class="cmd">/percy-orchestrator-gated</span> <span class="string">"Percy users spend too long reviewing diffs manually..."</span>
+<span class="cmd">@percy-orchestrator</span> <span class="string">"Percy users spend too long reviewing diffs manually..."</span>
 
 <span class="comment"># Or start from a PRD</span>
-<span class="cmd">/percy-orchestrator-gated</span> Here's the PRD: <span class="string">[paste]</span>
+<span class="cmd">@percy-orchestrator</span> Here's the PRD: <span class="string">[paste]</span>
 
 <span class="comment"># Run QA independently</span>
 <span class="cmd">/percy-qa</span>
@@ -495,7 +495,7 @@
         │   └── percy-usability-reviewer.md<br>
         ├── <span class="dir">root-skills/</span><span class="cm">                  # Report generator</span><br>
         ├── <span class="dir">project-skills/</span><span class="cm">               # 3 gated workflow skills</span><br>
-        │   ├── <span class="hl">percy-orchestrator-gated.md</span><span class="cm">  # 8-stage gated orchestrator</span><br>
+        │   ├── <span class="hl">percy-orchestrator-gated.md</span><span class="cm">  # Alias skill (agent is primary)</span><br>
         │   ├── <span class="hl">percy-qa.md</span><span class="cm">                  # Comprehensive QA pipeline</span><br>
         │   └── <span class="hl">percy-local.md</span><span class="cm">               # Local dev server startup</span><br>
         ├── <span class="dir">web-agents/</span><span class="cm">                   # 5 web review agents</span><br>

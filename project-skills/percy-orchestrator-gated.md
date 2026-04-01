@@ -1,6 +1,6 @@
 ---
 name: percy-orchestrator-gated
-description: Gated feature orchestration workflow with mandatory user approval between every stage. Use when the user says "/percy-orchestrator-gated", "orchestrate", "build this feature", or provides a PRD/user story.
+description: Alias for @percy-orchestrator agent. Prefer using @percy-orchestrator directly. This skill exists for backward compatibility.
 user-invocable: true
 ---
 
@@ -10,7 +10,7 @@ End-to-end feature development pipeline with **mandatory user approval gates** b
 
 ## Trigger
 
-When the user provides a PRD, user story, or feature request and invokes `/percy-orchestrator-gated`.
+When the user provides a PRD, user story, or feature request. Prefer `@percy-orchestrator` (agent) over this skill.
 
 ## Gate Protocol
 

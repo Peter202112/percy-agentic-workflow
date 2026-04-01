@@ -249,9 +249,9 @@
         <span class="cmd">cd</span> Percy<br>
         <span class="cmd">claude</span><br><br>
         <span class="comment"># 2. Start from a problem statement (gated workflow)</span><br>
-        <span class="cmd">/percy-orchestrator-gated</span> <span class="string">"Percy users spend too long reviewing visual<br>diffs manually. They have no way to prioritize which diffs matter most."</span><br><br>
+        <span class="cmd">@percy-orchestrator</span> <span class="string">"Percy users spend too long reviewing visual<br>diffs manually. They have no way to prioritize which diffs matter most."</span><br><br>
         <span class="comment"># 3. Or start from a PRD</span><br>
-        <span class="cmd">/percy-orchestrator-gated</span> Here's the PRD: <span class="string">[paste or reference file]</span><br><br>
+        <span class="cmd">@percy-orchestrator</span> Here's the PRD: <span class="string">[paste or reference file]</span><br><br>
         <span class="comment"># 4. Run QA independently</span><br>
         <span class="cmd">/percy-qa</span><br><br>
         <span class="comment"># 5. Start local dev server</span><br>
@@ -380,7 +380,7 @@
     <table>
         <thead><tr><th>Agent</th><th>Invoke</th><th>Purpose</th></tr></thead>
         <tbody>
-            <tr><td><strong>percy-orchestrator-gated</strong></td><td><code>/percy-orchestrator-gated</code></td><td>8-stage gated workflow with 9 approval gates (skill, not agent)</td></tr>
+            <tr><td><strong>percy-orchestrator</strong></td><td><code>@percy-orchestrator</code></td><td>8-stage gated workflow with 9 approval gates, mandatory Figma, feedback loops</td></tr>
             <tr><td><strong>percy-researcher</strong></td><td><code>@percy-researcher</code></td><td>PM + UX research: problem decomposition, competitive analysis, 3 solution directions</td></tr>
             <tr><td><strong>percy-pm</strong></td><td><code>@percy-pm</code></td><td>Reframes problems or PRDs, defines features/phases/metrics, produces product brief</td></tr>
             <tr><td><strong>percy-design-explorer</strong></td><td><code>@percy-design-explorer</code></td><td>3 Figma mockups using Percy components, weighted comparison, recommendation</td></tr>
@@ -476,7 +476,7 @@
     <table>
         <thead><tr><th>Skill</th><th>Invoke</th><th>Purpose</th></tr></thead>
         <tbody>
-            <tr><td><strong>percy-orchestrator-gated</strong></td><td><code>/percy-orchestrator-gated</code></td><td>Full 8-stage gated workflow with 9 approval gates. Mandatory Figma, feedback loops, cleanup.</td></tr>
+            <tr><td><strong>percy-orchestrator</strong></td><td><code>@percy-orchestrator</code></td><td>Full 8-stage gated workflow with 9 approval gates. Mandatory Figma, feedback loops, cleanup.</td></tr>
             <tr><td><strong>percy-qa</strong></td><td><code>/percy-qa</code></td><td>Comprehensive QA pipeline: Docker → API specs → frontend build → ESLint → detailed test report</td></tr>
             <tr><td><strong>percy-local</strong></td><td><code>/percy-local</code></td><td>Start percy-web at localhost:4200 with production backend + auth token</td></tr>
             <tr><td><strong>percy-pr-validate</strong> (API)</td><td><code>/percy-pr-validate</code></td><td>Routes to 9 review agents based on changed files</td></tr>
