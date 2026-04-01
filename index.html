@@ -224,13 +224,13 @@
 <!-- ── Hero ── -->
 <div class="hero">
     <h1>Percy Agentic Workflow</h1>
-    <p>A multi-agent system for Claude Code that takes a problem statement through research, product definition, design exploration, implementation, and validation.</p>
+    <p>A multi-agent system for Claude Code that takes a problem statement through research, product definition, design exploration, implementation, QA verification, and PR creation &mdash; with <strong>mandatory user approval gates</strong> at every stage.</p>
     <div class="hero-stats">
         <span class="hero-stat"><strong>20</strong> agents</span>
         <span class="hero-stat"><strong>17</strong> commands</span>
-        <span class="hero-stat"><strong>5</strong> skills</span>
-        <span class="hero-stat"><strong>9</strong> phases</span>
-        <span class="hero-stat"><strong>6</strong> review gates</span>
+        <span class="hero-stat"><strong>8</strong> skills</span>
+        <span class="hero-stat"><strong>8</strong> stages</span>
+        <span class="hero-stat"><strong>9</strong> approval gates</span>
     </div>
 </div>
 
@@ -246,7 +246,7 @@
             <li>
                 <strong>Get the package</strong>
                 <div class="detail">Clone or download this repo</div>
-                <pre><code><span class="cmd">git clone</span> git@github.com:your-org/percy-claude-workflow.git</code></pre>
+                <pre><code><span class="cmd">git clone</span> git@github.com:Peter202112/percy-agentic-workflow.git</code></pre>
             </li>
             <li>
                 <strong>Go to your Percy monorepo</strong>
@@ -293,90 +293,83 @@
 <!-- ── Workflow ── -->
 <section class="section" id="workflow">
     <h2>What It Does</h2>
-    <p>Provide a problem statement or PRD. The orchestrator walks you through 9 phases, producing an HTML review report at each gate.</p>
+    <p>Provide a problem statement or PRD. The gated orchestrator walks you through 8 stages with 9 approval gates. Every stage pauses for your approval &mdash; feedback loops back to re-run that stage.</p>
 
     <div class="timeline">
         <div class="tl-item">
             <div class="tl-dot research">1</div>
             <div class="tl-body">
                 <h4>Research</h4>
-                <p>Competitive analysis (Applitools, Chromatic, etc.), problem decomposition, 3 solution directions.</p>
-                <span class="agent-tag">@percy-researcher</span>
-                <span class="output-tag">reviews/research-{date}.html</span>
-                <span class="gate-badge">Review Gate</span>
+                <p>Competitive analysis, codebase mapping, 3 solution directions. Includes <strong>User Benefit Validation</strong>: problem solved, impact metric, alignment check.</p>
+                <span class="agent-tag">percy-researcher + code-explorer</span>
+                <span class="output-tag">reviews/research-{feature}.html</span>
+                <span class="gate-badge">🚦 Gate 1</span>
             </div>
         </div>
         <div class="tl-item">
             <div class="tl-dot research">2</div>
             <div class="tl-body">
                 <h4>Product Brief</h4>
-                <p>Reframes problem, defines user personas, features with acceptance criteria, implementation phases, success metrics.</p>
-                <span class="agent-tag">@percy-pm</span>
-                <span class="output-tag">reviews/product-brief-{date}.html</span>
-                <span class="gate-badge">Review Gate</span>
+                <p>Personas, phased deliverables, acceptance criteria, edge cases, success metrics.</p>
+                <span class="agent-tag">percy-pm</span>
+                <span class="output-tag">reviews/product-brief-{feature}.html</span>
+                <span class="gate-badge">🚦 Gate 2</span>
             </div>
         </div>
         <div class="tl-item">
-            <div class="tl-dot research">3</div>
+            <div class="tl-dot gate">3</div>
             <div class="tl-body">
-                <h4>Design Exploration</h4>
-                <p>3 UI approaches mocked up in Figma using Percy&rsquo;s component library. Comparison matrix and recommendation.</p>
-                <span class="agent-tag">@percy-design-explorer</span>
-                <span class="output-tag">Figma file + HTML report</span>
-                <span class="gate-badge">Review Gate</span>
+                <h4>Design <span style="background:var(--warning-light);color:var(--warning);padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;">MANDATORY</span></h4>
+                <p><strong>Blocks</strong> until Figma page URL + design system reference provided. Creates 3+ screens using extracted tokens. After approval, mockups are <strong>embedded into product brief</strong> (single source of truth).</p>
+                <span class="agent-tag">percy-design-explorer + Figma MCP</span>
+                <span class="output-tag">Figma + updated product brief</span>
+                <span class="gate-badge">🚦 Gate 3</span>
             </div>
         </div>
         <div class="tl-item">
             <div class="tl-dot gate">4</div>
             <div class="tl-body">
                 <h4>Implementation Plan</h4>
-                <p>File-level change list, API contract mapping, dependency order.</p>
-                <span class="agent-tag">@percy-orchestrator</span>
-                <span class="output-tag">reviews/implementation-plan-{date}.html</span>
-                <span class="gate-badge">Review Gate</span>
+                <p>DB schema, API models/services/controllers, Web components, file-by-file change list. Uses product brief with embedded mockups.</p>
+                <span class="agent-tag">code-architect</span>
+                <span class="gate-badge">🚦 Gate 4</span>
             </div>
         </div>
         <div class="tl-item">
             <div class="tl-dot build">5</div>
             <div class="tl-body">
-                <h4>API Implementation</h4>
-                <p>Migration &rarr; model &rarr; service &rarr; controller &rarr; serializer &rarr; specs. Spot-checked by review agents.</p>
-                <span class="agent-tag">percy-api agents</span>
+                <h4>Implementation (API + Web)</h4>
+                <p>API: migration &rarr; model &rarr; service &rarr; controller. Web: model &rarr; adapter &rarr; component. ESLint auto-fix. <strong>Two sub-gates</strong> for API and Web diffs.</p>
+                <span class="agent-tag">Direct code writing</span>
+                <span class="gate-badge">🚦 Gate 5a (API)</span>
+                <span class="gate-badge">🚦 Gate 5b (Web)</span>
             </div>
         </div>
         <div class="tl-item">
-            <div class="tl-dot build">6</div>
+            <div class="tl-dot check">6</div>
             <div class="tl-body">
-                <h4>Web Implementation</h4>
-                <p>Model &rarr; adapter &rarr; route &rarr; components &rarr; templates. Parallel after serializer is defined.</p>
-                <span class="agent-tag">percy-web agents</span>
+                <h4>QA Verification</h4>
+                <p>Docker setup, API service specs, API request specs, frontend build, ESLint. Produces <strong>comprehensive test report</strong> with detailed test plan, suite, and test cases (objective, steps, data, expected/actual, notes).</p>
+                <span class="agent-tag">/percy-qa</span>
+                <span class="output-tag">reviews/testresults.md + .html</span>
+                <span class="gate-badge">🚦 Gate 6</span>
             </div>
         </div>
         <div class="tl-item">
             <div class="tl-dot check">7</div>
             <div class="tl-body">
-                <h4>Validation</h4>
-                <p>14+ agents check code quality, security, accessibility, design tokens, API contracts.</p>
-                <span class="agent-tag">percy-pr-validate</span>
-                <span class="output-tag">reviews/validation-{date}.html</span>
+                <h4>Commit &amp; PR</h4>
+                <p>Commit in both repos with descriptive messages. Push and create PR only after explicit approval.</p>
+                <span class="agent-tag">git + gh pr create</span>
+                <span class="gate-badge">🚦 Gate 7</span>
             </div>
         </div>
         <div class="tl-item">
             <div class="tl-dot check">8</div>
             <div class="tl-body">
-                <h4>Usability Review</h4>
-                <p>Nielsen&rsquo;s 10 heuristics. Cross-referenced against PRD, competitor research, and chosen design.</p>
-                <span class="agent-tag">@percy-usability-reviewer</span>
-                <span class="output-tag">reviews/usability-review-{date}.html</span>
-                <span class="gate-badge">Review Gate</span>
-            </div>
-        </div>
-        <div class="tl-item">
-            <div class="tl-dot check">9</div>
-            <div class="tl-body">
-                <h4>CI + PR</h4>
-                <p>Buildkite CI monitoring, PR creation with summary, contract alignment, and report links.</p>
-                <span class="output-tag">reviews/pr-summary-{date}.html</span>
+                <h4>Cleanup</h4>
+                <p>Presents running resources (Docker, dev server, browser). Warns restart takes 2-5 min. Options: shut down all, keep Docker, keep everything. <strong>Default: keep running.</strong></p>
+                <span class="gate-badge">🚦 Gate 8</span>
             </div>
         </div>
     </div>
@@ -406,6 +399,16 @@
             <h4>Atlassian Plugin</h4>
             <p><code>/plugins enable atlassian</code> &mdash; for Jira integration</p>
         </div>
+        <div class="prereq optional">
+            <span class="tag-opt">Optional</span>
+            <h4>agent-browser</h4>
+            <p><code>npm i -g agent-browser && agent-browser install</code> &mdash; for visual QA</p>
+        </div>
+        <div class="prereq optional">
+            <span class="tag-opt">Optional</span>
+            <h4>Docker (Colima)</h4>
+            <p><code>brew install colima docker docker-compose</code> &mdash; for API tests</p>
+        </div>
     </div>
 </section>
 
@@ -415,16 +418,21 @@
     <pre><code><span class="cmd">cd</span> percy
 <span class="cmd">claude</span>
 
-<span class="comment"># Start from a problem statement</span>
-<span class="cmd">@percy-orchestrator</span> <span class="string">"Percy users spend too long reviewing diffs manually..."</span>
+<span class="comment"># Start the gated workflow from a problem statement</span>
+<span class="cmd">/percy-orchestrator-gated</span> <span class="string">"Percy users spend too long reviewing diffs manually..."</span>
 
 <span class="comment"># Or start from a PRD</span>
-<span class="cmd">@percy-orchestrator</span> Here's the PRD: <span class="string">[paste]</span>
+<span class="cmd">/percy-orchestrator-gated</span> Here's the PRD: <span class="string">[paste]</span>
 
-<span class="comment"># Or use individual agents/commands directly</span>
+<span class="comment"># Run QA independently</span>
+<span class="cmd">/percy-qa</span>
+
+<span class="comment"># Start local dev server</span>
+<span class="cmd">/percy-local</span>
+
+<span class="comment"># Or use individual agents/commands</span>
 <span class="cmd">@percy-researcher</span> <span class="string">"How do competitors handle baseline management?"</span>
-<span class="cmd">/percy:endpoint-safety</span>
-<span class="cmd">/percy:design-system-check</span></code></pre>
+<span class="cmd">/percy:endpoint-safety</span></code></pre>
 </section>
 
 <!-- ── Agent Scoping ── -->
@@ -474,7 +482,7 @@
 <section class="section" id="contents">
     <h2>What&rsquo;s Included</h2>
     <div class="file-tree">
-        <span class="dir">percy-claude-workflow/</span><br>
+        <span class="dir">percy-agentic-workflow/</span><br>
         ├── <span class="hl">install.sh</span><span class="cm">                    # &larr; Run this</span><br>
         ├── <span class="file">README.md</span><br>
         ├── <span class="file">index.html</span><span class="cm">                   # This file</span><br>
@@ -486,6 +494,10 @@
         │   ├── percy-api-contract-reviewer.md<br>
         │   └── percy-usability-reviewer.md<br>
         ├── <span class="dir">root-skills/</span><span class="cm">                  # Report generator</span><br>
+        ├── <span class="dir">project-skills/</span><span class="cm">               # 3 gated workflow skills</span><br>
+        │   ├── <span class="hl">percy-orchestrator-gated.md</span><span class="cm">  # 8-stage gated orchestrator</span><br>
+        │   ├── <span class="hl">percy-qa.md</span><span class="cm">                  # Comprehensive QA pipeline</span><br>
+        │   └── <span class="hl">percy-local.md</span><span class="cm">               # Local dev server startup</span><br>
         ├── <span class="dir">web-agents/</span><span class="cm">                   # 5 web review agents</span><br>
         ├── <span class="dir">web-commands/</span><span class="cm">                 # 5 web commands</span><br>
         ├── <span class="dir">web-skills/</span><span class="cm">                   # Web PR validation</span><br>
@@ -498,7 +510,7 @@
 </section>
 
 <div class="footer">
-    Percy Agentic Workflow &middot; Built with Claude Code &middot; 20 agents &middot; 17 commands &middot; 5 skills
+    Percy Agentic Workflow &middot; Built with Claude Code &middot; 20 agents &middot; 8 skills &middot; 9 approval gates
 </div>
 
 </div><!-- /container -->
