@@ -23,13 +23,17 @@ lsof -ti:4200 2>/dev/null && echo "STILL IN USE" || echo "Port 4200 is free"
 ```
 
 ### Step 3: Start the server
-Run this command in the background from `/Users/peterjoseph/Desktop/claude_poc/Percy/percy-web`:
+Run this command in the background from your `percy-web/` directory:
 ```bash
 source ~/.nvm/nvm.sh && nvm use && \
-  PERCY_WEB_API_HOST=https://percy-enterprise.browserstack.com \
-  PERCY_WEB_AUTH_TOKEN=e218fbb5f8aeee43688ea0afdf32613b6c6d94aa9cf7e858b47b588994bddaaa \
+  PERCY_WEB_API_HOST=<YOUR_PERCY_API_HOST> \
+  PERCY_WEB_AUTH_TOKEN=<YOUR_PERCY_AUTH_TOKEN> \
   yarn start
 ```
+
+> **Setup:** Set these env vars for your Percy instance. For BrowserStack Percy, the API host
+> is typically `https://percy.io` or your enterprise URL. Get your auth token from
+> Percy Profile Settings → User Token.
 
 Run this in background with `run_in_background: true` and timeout of 600000ms.
 
@@ -43,7 +47,7 @@ After ~90 seconds, check the output file tail for "Build successful" or errors.
 
 ### Key details
 - **Node version:** v14.18.3 (from .nvmrc via nvm)
-- **API Host:** percy-enterprise.browserstack.com (BrowserStack enterprise)
-- **Auth token bypasses OAuth** — without it, login redirects away from localhost
+- **API Host:** Set via `PERCY_WEB_API_HOST` env var (your Percy instance URL)
+- **Auth token bypasses OAuth** — set via `PERCY_WEB_AUTH_TOKEN` (from Percy Profile Settings)
 - **Build time:** ~90-100 seconds
 - **SSL:** serves on HTTPS (certs must be installed via `make certs` first time)

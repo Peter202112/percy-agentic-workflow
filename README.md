@@ -8,7 +8,7 @@ A multi-agent system for [Claude Code](https://claude.ai/code) that takes a prob
 
 ```bash
 # 1. Clone this repo
-git clone git@github.com:peterjo/percy-agentic-workflow.git
+git clone git@github.com:your-org/percy-agentic-workflow.git
 
 # 2. Run the installer targeting your Percy monorepo
 ./percy-agentic-workflow/install.sh --all /path/to/percy

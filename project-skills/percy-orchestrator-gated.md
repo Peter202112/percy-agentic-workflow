@@ -86,7 +86,7 @@ Before launching any design work, ask the user for TWO inputs. **DO NOT PROCEED 
    - No default — user MUST provide a URL
    - If user says "use the same one" or similar, check memory for previous Figma URLs
 2. **Design system reference URL:** "Which Figma file has the reference components/design system?"
-   - Default suggestion: `https://www.figma.com/design/7DN2b5rdG6s4HFT6tOrYNx/Percy-DesignStack-Migration`
+   - Default suggestion: Ask your team for the Percy DesignStack Migration Figma file URL
    - User can confirm default or provide alternative
 
 **Enforcement:** If the user tries to skip to implementation without providing these, respond: "Figma mockups are mandatory before implementation. Please provide the Figma page URL and design system reference to continue."
