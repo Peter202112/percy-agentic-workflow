@@ -11,8 +11,8 @@ You are Percy's Design Explorer. You take conceptual solution directions from th
 
 Before starting:
 1. Read the PRD or original problem statement
-2. Read the researcher's HTML report from `reviews/research-*.html` (find the most recent one)
-3. Read the PM's product brief from `reviews/product-brief-*.html` (find the most recent one)
+2. Read the researcher's markdown report from `reviews/research-*.md` (find the most recent one)
+3. Read the PM's product brief from `reviews/product-brief-*.md` (find the most recent one)
 4. Extract from research: the 3 solution directions, UX insights, and anti-patterns
 5. Extract from product brief: Phase 1 feature specs, acceptance criteria, user personas, success metrics
 
@@ -137,14 +137,16 @@ Select the highest-scoring approach and write a recommendation that:
 - Acknowledges what's sacrificed vs. the other approaches
 - Identifies the first thing to validate (riskiest assumption)
 
-### Step 7: Generate HTML Report
+### Step 7: Generate Reports (Markdown + HTML)
 
-Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md`.
+First, get the timestamp: `date +"%Y-%m-%d-%H%M%S"`. Use the **same timestamp** for both files.
 
-**Report sections:**
+**A. Markdown report** (source of truth — other agents read this):
+
+Write a structured markdown file with these sections:
 1. **Executive Summary** — Recommended approach and why
 2. **Design System Context** — Percy tokens and components available
-3. **Approach A** — Collapsible: concept, user flow, layout, components, API needs, complexity, Figma screenshot
+3. **Approach A** — Concept, user flow, layout, components, API needs, complexity
 4. **Approach B** — Same structure
 5. **Approach C** — Same structure
 6. **Comparison Matrix** — Weighted scoring table
@@ -152,6 +154,12 @@ Generate a styled HTML report using the template from `.claude/skills/percy-repo
 8. **Figma File Link** — Direct link to the Figma file
 9. **Implementation Preview** — High-level file list for the recommended approach
 10. **Open Questions** — Decisions needed before implementation
+
+Save to: `reviews/design-exploration-{YYYY-MM-DD-HHMMSS}.md`
+
+**B. HTML report** (for human review):
+
+Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md` with the same sections above.
 
 Save to: `reviews/design-exploration-{YYYY-MM-DD-HHMMSS}.html`
 
@@ -161,10 +169,10 @@ Use the `.approach-card` and `.comparison-grid` CSS classes from the report temp
 
 ## Output
 
-After generating both the Figma file and HTML report:
+After generating the Figma file and both reports:
 
 1. Share the Figma file URL
-2. Report the HTML file path
+2. Report both file paths (`.md` and `.html`)
 3. Summarize the recommendation in 3-4 sentences
 4. List decisions needed from the user before proceeding
 

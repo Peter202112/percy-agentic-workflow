@@ -12,18 +12,22 @@ Generate a self-contained, professionally styled HTML report and save it to `Per
 ## Usage
 
 When an agent (researcher, design-explorer, validator, usability-reviewer) finishes its work, call this skill with:
-1. **Report type** — one of: `research`, `design-exploration`, `implementation-plan`, `validation`, `usability-review`, `pr-summary`
+1. **Report type** — one of: `research`, `product-brief`, `design-exploration`, `implementation-plan`, `validation`, `usability-review`, `pr-summary`
 2. **PRD title** — short title from the PRD for the report header
 3. **Report content** — the structured findings/analysis from the agent
 
 ## Output
 
-Saves to: `reviews/{report-type}-YYYY-MM-DD-HHMMSS.html`
+Each report produces **two files** with the same timestamp:
+- `reviews/{report-type}-YYYY-MM-DD-HHMMSS.md` — structured markdown (source of truth for agents)
+- `reviews/{report-type}-YYYY-MM-DD-HHMMSS.html` — styled HTML (for human review)
 
 The timestamp uses the current date/time. Run this bash command to get it:
 ```bash
 date +"%Y-%m-%d-%H%M%S"
 ```
+
+**Always write the `.md` file first**, then generate the `.html` from the same content.
 
 ## HTML Template
 
@@ -275,15 +279,19 @@ Generate the HTML report using this template structure. All CSS is inline — no
 When generating a report:
 
 1. Run `mkdir -p reviews` in the Percy root directory
-2. Get the timestamp: `date +"%Y-%m-%d-%H%M%S"`
-3. Construct the full HTML by replacing template placeholders with actual content
-4. Use the appropriate HTML elements:
-   - `<section class="section">` for major sections
-   - `<details><summary>Title</summary><div class="content">...</div></details>` for collapsible sections
-   - `<span class="badge badge-high">HIGH</span>` for severity badges
-   - `<div class="comparison-grid">` with `<div class="approach-card">` for comparing approaches
-   - `<div class="approach-card recommended">` for the recommended option
-   - `<a class="figma-link" href="...">Open in Figma</a>` for Figma file links
-   - `<div class="figma-embed"><img src="..." alt="..."></div>` for Figma screenshots
-5. Write the complete HTML to `reviews/{report-type}-{timestamp}.html`
-6. Report the file path back to the user
+2. Get the timestamp: `date +"%Y-%m-%d-%H%M%S"` — use the **same timestamp** for both files
+3. **Write the markdown file first** to `reviews/{report-type}-{timestamp}.md`:
+   - Use clean, structured markdown with headers, lists, and tables
+   - This is the source of truth that downstream agents will read
+   - No HTML markup — pure markdown
+4. **Then generate the HTML file** to `reviews/{report-type}-{timestamp}.html`:
+   - Construct the full HTML by replacing template placeholders with the same content
+   - Use the appropriate HTML elements:
+     - `<section class="section">` for major sections
+     - `<details><summary>Title</summary><div class="content">...</div></details>` for collapsible sections
+     - `<span class="badge badge-high">HIGH</span>` for severity badges
+     - `<div class="comparison-grid">` with `<div class="approach-card">` for comparing approaches
+     - `<div class="approach-card recommended">` for the recommended option
+     - `<a class="figma-link" href="...">Open in Figma</a>` for Figma file links
+     - `<div class="figma-embed"><img src="..." alt="..."></div>` for Figma screenshots
+5. Report both file paths back to the user

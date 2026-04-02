@@ -263,7 +263,7 @@
 <!-- ── Workflow ── -->
 <section class="section" id="workflow">
     <h2>Workflow Stages</h2>
-    <p>Each stage produces an HTML report in <code>reviews/</code> and pauses at an approval gate. Feedback re-runs the current stage — no downstream work is wasted.</p>
+    <p>Each stage produces <strong>two files</strong> in <code>reviews/</code>: a <code>.md</code> (structured markdown — source of truth that downstream agents read) and an <code>.html</code> (styled report for human review). Each stage pauses at an approval gate. Feedback re-runs the current stage — no downstream work is wasted.</p>
 
     <div class="workflow-flow">
         <div class="phase-card review-gate">
@@ -272,7 +272,7 @@
                 <h4>Research</h4>
                 <span class="agent">percy-researcher + code-explorer</span>
                 <p>Competitive analysis, codebase mapping, 3 solution directions. Includes <strong>User Benefit Validation</strong>: problem solved, impact metric, alignment check.</p>
-                <div class="output">reviews/research-{feature}.html</div>
+                <div class="output">reviews/research-{feature}.md + .html</div>
                 <span class="gate">🚦 Gate: Approve research findings + alignment</span>
             </div>
         </div>
@@ -282,7 +282,7 @@
                 <h4>Product Brief</h4>
                 <span class="agent">percy-pm</span>
                 <p>Personas, phased deliverables, acceptance criteria, edge cases, success metrics.</p>
-                <div class="output">reviews/product-brief-{feature}.html</div>
+                <div class="output">reviews/product-brief-{feature}.md + .html</div>
                 <span class="gate">🚦 Gate: Approve scope + criteria</span>
             </div>
         </div>
@@ -292,7 +292,7 @@
                 <h4>Design <span style="background:var(--warning-light);color:var(--warning);padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;">MANDATORY</span></h4>
                 <span class="agent">percy-design-explorer + Figma MCP</span>
                 <p><strong>Blocks</strong> until user provides: (1) Figma page URL for mocks, (2) design system reference URL. Extracts tokens from reference, creates 3+ screens. After approval, mockups are <strong>embedded into the product brief</strong> (single source of truth).</p>
-                <div class="output">Figma mockups + reviews/design-exploration-{feature}.html + updated product brief</div>
+                <div class="output">Figma mockups + reviews/design-exploration-{feature}.md + .html + updated product brief</div>
                 <span class="gate">🚦 Gate: Approve mockup screenshots. Explicit "skip Figma" required to bypass.</span>
             </div>
         </div>
@@ -481,7 +481,7 @@
             <tr><td><strong>percy-local</strong></td><td><code>/percy-local</code></td><td>Start percy-web at localhost:4200 with production backend + auth token</td></tr>
             <tr><td><strong>percy-pr-validate</strong> (API)</td><td><code>/percy-pr-validate</code></td><td>Routes to 9 review agents based on changed files</td></tr>
             <tr><td><strong>percy-pr-validate</strong> (Web)</td><td><code>/percy-pr-validate</code></td><td>Routes to 5 review agents based on changed files</td></tr>
-            <tr><td><strong>percy-report-generator</strong></td><td>Auto</td><td>HTML report template for all review gates</td></tr>
+            <tr><td><strong>percy-report-generator</strong></td><td>Auto</td><td>Markdown + HTML report generator for all review gates</td></tr>
             <tr><td><strong>percy-migration-review</strong></td><td><code>/percy-migration-review</code></td><td>Migration safety validation</td></tr>
             <tr><td><strong>percy-ci-monitor</strong></td><td><code>/percy-ci-monitor</code></td><td>Buildkite pipeline monitoring</td></tr>
         </tbody>
@@ -529,16 +529,20 @@
 <!-- ── Reports ── -->
 <section class="section" id="reports">
     <h2>Review Reports</h2>
-    <p>All HTML reports are self-contained (inline CSS, no external dependencies). Open in any browser. The product brief is the single source of truth — it includes embedded mockup screenshots after design approval.</p>
+    <p>Each stage produces two files: <code>.md</code> (structured markdown — agents read these as input for downstream stages) and <code>.html</code> (styled, self-contained report for human review). The product brief is the single source of truth — it includes embedded mockup screenshots after design approval.</p>
     <pre><code>reviews/
-├── research-{feature}.html              # Stage 1: Competitive analysis + user benefit validation
-├── product-brief-{feature}.html         # Stage 2+3: Brief + embedded Figma mockup screenshots
-├── design-exploration-{feature}.html    # Stage 3: 3 approaches, comparison matrix
-├── testresults.md                       # Stage 6: Detailed test plan, suites, cases (markdown)
-├── testresults.html                     # Stage 6: Styled test report (HTML)
-├── validation-{feature}.html            # Stage 6: Validation summary
-├── screenshot-*.png                     # Stage 5: Browser automation screenshots
-└── test-results-{feature}.html          # Stage 6: Full pass/fail with spec output</code></pre>
+├── research-{feature}.md               ← agents read this
+├── research-{feature}.html             ← humans review this
+├── product-brief-{feature}.md          # Stage 2+3: Brief + mockup references
+├── product-brief-{feature}.html        # Stage 2+3: Brief + embedded Figma screenshots
+├── design-exploration-{feature}.md
+├── design-exploration-{feature}.html   # Stage 3: 3 approaches, comparison matrix
+├── testresults.md                      # Stage 6: Detailed test plan, suites, cases
+├── testresults.html                    # Stage 6: Styled test report
+├── validation-{feature}.md
+├── validation-{feature}.html           # Stage 6: Validation summary
+├── screenshot-*.png                    # Stage 5: Browser automation screenshots
+└── test-results-{feature}.html         # Stage 6: Full pass/fail with spec output</code></pre>
 </section>
 
 <!-- ── Suppression ── -->
@@ -590,8 +594,8 @@
         │   │   ├── <span class="new">percy-api-contract-reviewer.md</span><span class="comment"> # Contract validation</span><br>
         │   │   └── <span class="new">percy-usability-reviewer.md</span><span class="comment">    # UX audit (cross-repo)</span><br>
         │   └── <span class="dir">skills/</span><br>
-        │       └── <span class="new">percy-report-generator/SKILL.md</span><span class="comment"> # HTML report template</span><br>
-        ├── <span class="new">reviews/</span><span class="comment">                               # HTML reports (gitignored)</span><br>
+        │       └── <span class="new">percy-report-generator/SKILL.md</span><span class="comment"> # .md + .html report generator</span><br>
+        ├── <span class="new">reviews/</span><span class="comment">                               # .md + .html reports (gitignored)</span><br>
         ├── <span class="dir">percy-api/.claude/</span><br>
         │   ├── <span class="dir">agents/</span><span class="comment">                            # 9 API review agents</span><br>
         │   ├── <span class="dir">commands/percy/</span><span class="comment">                    # 14 API commands</span><br>

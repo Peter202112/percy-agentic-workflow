@@ -1,6 +1,6 @@
 # Percy Agentic Workflow
 
-A multi-agent system for [Claude Code](https://claude.ai/code) that takes a problem statement through research, product definition, design exploration (with Figma mockups), implementation, QA verification, and PR creation — with **mandatory user approval gates** at every stage.
+A multi-agent system for [Claude Code](https://claude.ai/code) that takes a problem statement through research, product definition, design exploration (with Figma mockups), implementation, QA verification, and PR creation — with **mandatory user approval gates** at every stage. Each review gate produces dual output: `.md` (for agents) + `.html` (for humans).
 
 **20 agents | 17 commands | 8 skills | 8 stages | 9 approval gates**
 

@@ -120,20 +120,28 @@ Quick scan of Percy's codebase to ground the research:
 
 This is NOT a detailed design — just enough to validate feasibility.
 
-### Step 7: Generate HTML Report
+### Step 7: Generate Reports (Markdown + HTML)
 
-Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md`.
+First, get the timestamp: `date +"%Y-%m-%d-%H%M%S"`. Use the **same timestamp** for both files.
 
-**Report sections:**
+**A. Markdown report** (source of truth — other agents read this):
+
+Write a structured markdown file with these sections:
 1. **Problem Statement** — Decomposed from PRD (jobs-to-be-done, user journey, success criteria)
 2. **User Journey Map** — Where this feature fits in Percy's existing flow
-3. **Competitive Analysis** — Per-competitor deep dive (collapsible sections)
+3. **Competitive Analysis** — Per-competitor deep dive
 4. **Solution Pattern Matrix** — Cross-competitor comparison table
 5. **UX Insights** — Effective patterns, mental models, anti-patterns
 6. **Industry Trends** — What's emerging in the space
-7. **3 Solution Directions** — Each as an approach card with pros/cons
+7. **3 Solution Directions** — Each with concept, tradeoffs, pros/cons
 8. **Percy Feasibility Signal** — What exists, what's needed
 9. **Open Questions** — Anything that needs stakeholder input
+
+Save to: `reviews/research-{YYYY-MM-DD-HHMMSS}.md`
+
+**B. HTML report** (for human review):
+
+Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md` with the same sections above.
 
 Save to: `reviews/research-{YYYY-MM-DD-HHMMSS}.html`
 
@@ -141,9 +149,9 @@ Save to: `reviews/research-{YYYY-MM-DD-HHMMSS}.html`
 
 ## Output
 
-After generating the HTML report:
+After generating both reports:
 
-1. Report the file path
+1. Report both file paths (`.md` and `.html`)
 2. Provide a brief summary (3-5 sentences) of the key findings
 3. Highlight the recommended solution direction and why
 4. List any open questions that need stakeholder input before proceeding to design exploration

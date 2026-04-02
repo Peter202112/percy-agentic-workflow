@@ -14,7 +14,7 @@ The user provides a paragraph or a few sentences describing a problem or opportu
 
 In this mode, you:
 1. Read the problem statement
-2. Read the researcher's output (`reviews/research-*.html` — find the most recent)
+2. Read the researcher's output (`reviews/research-*.md` — find the most recent)
 3. **Reframe the problem** — sharpen it using the research insights. The user's framing may be vague, biased toward a solution, or missing context the research surfaced.
 4. Produce a full product brief from scratch
 
@@ -35,7 +35,7 @@ In this mode, you:
 
 Read all available inputs:
 - The problem statement or PRD (provided by user)
-- The researcher's HTML report (`reviews/research-*.html`)
+- The researcher's markdown report (`reviews/research-*.md`)
 - Percy's existing feature set — scan `percy-web/app/routes/`, `percy-web/app/components/`, and `percy-api/app/controllers/` to understand what Percy already does in this area
 
 ### Step 2: Reframe the Problem
@@ -152,15 +152,17 @@ List decisions that need stakeholder input before design can proceed:
 - Technical feasibility questions
 - Business/strategy questions
 
-### Step 9: Generate HTML Report
+### Step 9: Generate Reports (Markdown + HTML)
 
-Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md`.
+First, get the timestamp: `date +"%Y-%m-%d-%H%M%S"`. Use the **same timestamp** for both files.
 
-**Report sections:**
+**A. Markdown report** (source of truth — other agents read this):
+
+Write a structured markdown file with these sections:
 1. **Executive Summary** — Reframed problem, key recommendation, phase overview
 2. **Problem Statement** — Sharp, evidence-based framing
-3. **User Personas** — 2-3 Percy-specific personas (collapsible)
-4. **Feature Specifications** — Each feature with user stories and acceptance criteria (collapsible)
+3. **User Personas** — 2-3 Percy-specific personas
+4. **Feature Specifications** — Each feature with user stories and acceptance criteria
 5. **Implementation Phases** — Phase 1/2/3 with features, dependencies, scope
 6. **Measures of Success** — Metrics table with baselines and targets
 7. **Constraints & Risks** — Technical, business, and scope risks
@@ -168,15 +170,21 @@ Generate a styled HTML report using the template from `.claude/skills/percy-repo
 9. **Open Questions** — Decisions needed before design
 10. **Research Cross-Reference** — How this brief maps to the researcher's insights
 
+Save to: `reviews/product-brief-{YYYY-MM-DD-HHMMSS}.md`
+
+**B. HTML report** (for human review):
+
+Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md` with the same sections above.
+
 Save to: `reviews/product-brief-{YYYY-MM-DD-HHMMSS}.html`
 
 ---
 
 ## Output
 
-After generating the HTML report:
+After generating both reports:
 
-1. Report the file path
+1. Report both file paths (`.md` and `.html`)
 2. Provide a 4-5 sentence summary:
    - The reframed problem
    - How many features across how many phases

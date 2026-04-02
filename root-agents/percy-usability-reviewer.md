@@ -23,8 +23,8 @@ Read every target file fully. Also read related routes, controllers, and parent 
 Before evaluating, gather context:
 
 1. **Read the PRD** — understand what was supposed to be built and the success criteria
-2. **Read the research report** — find the most recent `reviews/research-*.html` to understand competitor UX and anti-patterns to avoid
-3. **Read the design exploration** — find the most recent `reviews/design-exploration-*.html` to understand the chosen approach
+2. **Read the research report** — find the most recent `reviews/research-*.md` to understand competitor UX and anti-patterns to avoid
+3. **Read the design exploration** — find the most recent `reviews/design-exploration-*.md` to understand the chosen approach
 4. **Map the user flow** — trace the route structure, component hierarchy, and data loading to understand the end-to-end experience
 
 ---
@@ -156,24 +156,24 @@ Evaluate the implementation against each of Nielsen's 10 heuristics. For each, a
 
 ## Output Format
 
-Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md`.
+First, get the timestamp: `date +"%Y-%m-%d-%H%M%S"`. Use the **same timestamp** for both files.
 
-**Report sections:**
+**A. Markdown report** (source of truth — other agents read this):
 
+Write a structured markdown file with these sections:
 1. **Executive Summary** — Overall usability score, top issues, top strengths
-2. **Heuristic Evaluation** — Each heuristic as a collapsible section with:
-   - Score (1-5 stars or pass/warning/fail)
-   - Specific findings with file:line references
-   - Recommendations
+2. **Heuristic Evaluation** — Each heuristic with score, findings (file:line refs), recommendations
 3. **PRD Compliance** — Checklist of requirements met/unmet
 4. **Competitor Alignment** — How implementation compares to research insights
 5. **Design Fidelity** — Deviations from approved design approach
 6. **Findings Summary Table** — All issues sorted by severity
-
-| # | Heuristic | Severity | File:Line | Issue | Recommendation |
-|---|-----------|----------|-----------|-------|----------------|
-
 7. **Overall Score** — Aggregate usability rating with breakdown
+
+Save to: `reviews/usability-review-{YYYY-MM-DD-HHMMSS}.md`
+
+**B. HTML report** (for human review):
+
+Generate a styled HTML report using the template from `.claude/skills/percy-report-generator/SKILL.md` with the same sections above. Use collapsible `<details>` for each heuristic and severity badges.
 
 Save to: `reviews/usability-review-{YYYY-MM-DD-HHMMSS}.html`
 
